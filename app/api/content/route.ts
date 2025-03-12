@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
+import { generateSummaryAndCategory } from "@/lib/openai";
 
 // 輔助函數：檢查並獲取用戶 token
 async function getUserToken(req?: Request) {
@@ -109,12 +110,19 @@ export async function POST(req: Request) {
     console.log('POST 請求：用戶已登入，ID:', token.sub);
     const { url, title, content } = await req.json();
 
-    // 儲存擷取的內容
+    // 使用 LLM 生成摘要和分類
+    console.log('正在生成摘要和分類...');
+    const { summary, category } = await generateSummaryAndCategory(content, title, url);
+    console.log('生成完成，摘要長度:', summary?.length, '分類:', category);
+
+    // 儲存擷取的內容，包括摘要和分類
     const savedContent = await prisma.content.create({
       data: {
         url,
         title,
         content,
+        summary,
+        category,
         userId: token.sub as string,
       },
     });
@@ -123,6 +131,8 @@ export async function POST(req: Request) {
     return NextResponse.json({
       message: "內容已成功儲存",
       contentId: savedContent.id,
+      summary,
+      category
     });
   } catch (error) {
     console.error("儲存內容時發生錯誤:", error);

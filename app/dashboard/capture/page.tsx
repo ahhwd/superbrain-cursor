@@ -10,6 +10,8 @@ interface Content {
   title: string;
   url: string;
   content: string;
+  summary: string | null;
+  category: string | null;
   createdAt: string;
 }
 
@@ -221,9 +223,22 @@ export default function CapturePage() {
                             {content.title}
                           </a>
                         </h3>
-                        <p className="text-gray-600 text-sm mb-2">
-                          {new Date(content.createdAt).toLocaleString()}
-                        </p>
+                        <div className="flex flex-wrap gap-2 mb-2">
+                          {content.category && (
+                            <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
+                              {content.category}
+                            </span>
+                          )}
+                          <span className="text-gray-600 text-sm">
+                            {new Date(content.createdAt).toLocaleString()}
+                          </span>
+                        </div>
+                        {content.summary ? (
+                          <>
+                            <p className="text-gray-700 mb-2 font-medium">摘要：</p>
+                            <p className="text-gray-700 mb-4">{content.summary}</p>
+                          </>
+                        ) : null}
                         <p className="text-gray-700 line-clamp-3">{content.content}</p>
                       </div>
                     ))}
