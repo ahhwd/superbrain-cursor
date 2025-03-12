@@ -44,7 +44,6 @@ model User {
   updatedAt         DateTime           @updatedAt
   accounts          Account[]
   contents          Content[]
-  notionIntegration NotionIntegration?
   savedContents     SavedContent[]
   sessions          Session[]
   topics            Topic[]
@@ -56,20 +55,6 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
-}
-
-model NotionIntegration {
-  id                 String   @id @default(cuid())
-  userId             String   @unique
-  accessToken        String
-  workspaceId        String
-  botId              String?
-  expiresAt          DateTime?
-  databaseId         String?
-  notionDatabaseName String?
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
-  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model SavedContent {
@@ -88,7 +73,6 @@ model Topic {
   id            String         @id @default(cuid())
   name          String
   userId        String
-  notionPageId  String?
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)

@@ -3,15 +3,7 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import NotionDatabaseSelector from "./components/NotionDatabaseSelector";
 import Sidebar from "./components/Sidebar";
-
-interface NotionIntegration {
-  id: string;
-  workspaceId: string;
-  databaseId: string | null;
-  notionDatabaseName: string | null;
-}
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -21,52 +13,6 @@ export default function DashboardPage() {
       router.push('/auth/signin');
     },
   });
-
-  const [notionIntegration, setNotionIntegration] = useState<NotionIntegration | null>(null);
-  const [showDatabaseSelector, setShowDatabaseSelector] = useState(false);
-
-  useEffect(() => {
-    if (session) {
-      fetchNotionIntegration();
-    }
-  }, [session]);
-
-  const fetchNotionIntegration = async () => {
-    try {
-      const response = await fetch('/api/notion/integration', {
-        credentials: 'include',
-        headers: {
-          'Cache-Control': 'no-cache'
-        }
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        setNotionIntegration(data);
-        
-        // 如果已連接 Notion 但尚未選擇數據庫，顯示數據庫選擇器
-        if (data && !data.databaseId) {
-          setShowDatabaseSelector(true);
-        } else {
-          setShowDatabaseSelector(false);
-        }
-      }
-    } catch (err) {
-      console.error('獲取 Notion 整合資訊時發生錯誤:', err);
-    }
-  };
-
-  const handleDatabaseSelected = (databaseId: string, databaseName: string) => {
-    setNotionIntegration(prev => {
-      if (!prev) return null;
-      return {
-        ...prev,
-        databaseId,
-        notionDatabaseName: databaseName
-      };
-    });
-    setShowDatabaseSelector(false);
-  };
 
   if (status === "loading") {
     return (
@@ -91,22 +37,8 @@ export default function DashboardPage() {
                   <h1 className="text-2xl font-bold">儀表板</h1>
                   <p className="text-gray-600">歡迎回來，{session?.user?.name || "使用者"}！</p>
                 </div>
-                <div className="flex space-x-4">
-                  {notionIntegration && notionIntegration.databaseId && (
-                    <div className="bg-blue-100 text-blue-800 px-4 py-2 rounded">
-                      已選擇數據庫: {notionIntegration.notionDatabaseName || '未命名數據庫'}
-                    </div>
-                  )}
-                </div>
               </div>
             </div>
-
-            {showDatabaseSelector && notionIntegration && (
-              <NotionDatabaseSelector 
-                notionIntegrationId={notionIntegration.id} 
-                onDatabaseSelected={handleDatabaseSelected} 
-              />
-            )}
 
             <div className="bg-white shadow-lg rounded-lg p-6">
               <h2 className="text-xl font-semibold mb-4">歡迎使用 SuperBrain</h2>
@@ -121,9 +53,6 @@ export default function DashboardPage() {
                 <li className="mb-2">在「精華筆記」頁面查看您標記為重要的內容</li>
                 <li className="mb-2">在「帳號管理」頁面管理您的個人資料</li>
               </ul>
-              <p className="text-gray-700">
-                您也可以連接 Notion，將您的筆記同步到 Notion 數據庫中。
-              </p>
             </div>
           </div>
         </div>
