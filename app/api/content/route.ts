@@ -34,7 +34,7 @@ async function getUserToken(req?: Request) {
   }
 }
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
     const token = await getUserToken();
     
@@ -46,17 +46,44 @@ export async function GET() {
       );
     }
 
-    console.log('GET 請求：用戶已登入，ID:', token.sub);
+    // 獲取分頁參數
+    const { searchParams } = new URL(req.url);
+    const page = parseInt(searchParams.get('page') || '1');
+    const limit = parseInt(searchParams.get('limit') || '20');
+    
+    // 計算跳過的記錄數
+    const skip = (page - 1) * limit;
+
+    console.log('GET 請求：用戶已登入，ID:', token.sub, '頁碼:', page, '每頁數量:', limit);
+    
+    // 獲取總記錄數
+    const totalCount = await prisma.content.count({
+      where: {
+        userId: token.sub as string,
+      }
+    });
+    
+    // 獲取分頁後的內容
     const contents = await prisma.content.findMany({
       where: {
         userId: token.sub as string,
       },
       orderBy: {
         createdAt: 'desc'
-      }
+      },
+      skip,
+      take: limit
     });
 
-    return NextResponse.json(contents);
+    return NextResponse.json({
+      contents,
+      pagination: {
+        total: totalCount,
+        page,
+        limit,
+        totalPages: Math.ceil(totalCount / limit)
+      }
+    });
   } catch (error) {
     console.error("獲取內容時發生錯誤:", error);
     return NextResponse.json(
