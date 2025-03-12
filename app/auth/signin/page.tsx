@@ -3,6 +3,18 @@
 import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+
+// 為 Chrome API 添加類型聲明
+declare global {
+  interface Window {
+    chrome?: {
+      runtime: {
+        sendMessage: (extensionId: string, message: any) => void;
+      };
+    };
+  }
+}
 
 export default function SignInPage() {
   const router = useRouter();
@@ -32,9 +44,9 @@ export default function SignInPage() {
       const urlParams = new URLSearchParams(window.location.search);
       const extensionId = urlParams.get('extensionId');
 
-      if (extensionId) {
+      if (extensionId && window.chrome?.runtime) {
         // 向 Chrome Extension 發送登入成功訊息
-        chrome.runtime.sendMessage(extensionId, {
+        window.chrome.runtime.sendMessage(extensionId, {
           type: 'LOGIN_SUCCESS',
           token: result?.ok ? 'dummy-token' : null, // 這裡應該使用實際的 token
           user: {
@@ -98,6 +110,14 @@ export default function SignInPage() {
                     </button>
                   </div>
                 </form>
+                <div className="mt-6 text-center">
+                  <p className="text-sm text-gray-600">
+                    還沒有帳號？{' '}
+                    <Link href="/auth/register" className="font-medium text-indigo-600 hover:text-indigo-500">
+                      立即註冊
+                    </Link>
+                  </p>
+                </div>
               </div>
             </div>
           </div>

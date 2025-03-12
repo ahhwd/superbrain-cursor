@@ -4,18 +4,13 @@
   "version": "1.0",
   "description": "Save and organize web content with SuperBrain",
   "permissions": [
-    "storage",
     "activeTab",
     "scripting",
-    "tabs",
-    "cookies"
+    "cookies",
+    "storage"
   ],
   "host_permissions": [
-    "http://localhost:*/*",
-    "http://localhost:3000/*",
-    "http://localhost:3001/*",
-    "http://localhost:3002/*",
-    "http://localhost:3003/*"
+    "http://localhost:*/*"
   ],
   "action": {
     "default_popup": "src/popup.html"

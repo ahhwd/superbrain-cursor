@@ -55,6 +55,8 @@ model User {
   topics           Topic[]
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
+
+  contents Content[]
 }
 
 model VerificationToken {
@@ -99,4 +101,15 @@ model Topic {
   savedContents SavedContent[]
 
   @@unique([userId, name])
+}
+
+model Content {
+  id        String   @id @default(cuid())
+  url       String
+  title     String
+  content   String   @db.Text
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

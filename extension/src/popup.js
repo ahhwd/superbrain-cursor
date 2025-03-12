@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   const actionContainer = document.getElementById('action-container');
   const loginButton = document.getElementById('login-button');
   const extractFullButton = document.getElementById('extract-full');
-  const extractSelectedButton = document.getElementById('extract-selected');
 
   // 檢查伺服器狀態和端口
   async function checkServer() {
@@ -12,230 +11,174 @@ document.addEventListener('DOMContentLoaded', async () => {
       try {
         const response = await fetch(`http://localhost:${port}/api/health`);
         if (response.ok) {
+          console.log('伺服器運行在端口:', port);
           return port;
         }
       } catch (error) {
+        console.log(`端口 ${port} 連接失敗:`, error);
         continue;
       }
     }
     throw new Error('無法連接到 SuperBrain 伺服器');
   }
 
+  // 顯示擷取按鈕
+  function showExtractButtons() {
+    extractFullButton.style.display = 'block';
+    loginButton.style.display = 'none';
+  }
+
+  // 隱藏擷取按鈕
+  function hideExtractButtons() {
+    extractFullButton.style.display = 'none';
+    loginButton.style.display = 'block';
+  }
+
+  // 獲取所有相關的 session cookies
+  async function getSessionCookies() {
+    const cookies = await chrome.cookies.getAll({
+      domain: 'localhost'
+    });
+
+    // 找出所有可能的 next-auth session cookies
+    const sessionCookies = cookies.filter(cookie => 
+      cookie.name === 'next-auth.session-token' ||
+      cookie.name === '__Secure-next-auth.session-token' ||
+      cookie.name === '__Host-next-auth.session-token' ||
+      cookie.name.includes('next-auth.csrf-token') ||
+      cookie.name.includes('next-auth.callback-url')
+    );
+
+    console.log('找到的所有 session cookies:', sessionCookies);
+    return sessionCookies;
+  }
+
+  // 構建 cookie 字符串
+  function buildCookieString(cookies) {
+    return cookies.map(cookie => `${cookie.name}=${cookie.value}`).join('; ');
+  }
+
   // 檢查登入狀態
   async function checkLoginStatus(port) {
     try {
-      // 使用更寬鬆的 domain 匹配來獲取 cookie
-      const cookies = await chrome.cookies.getAll({
-        domain: 'localhost'
-      });
-      console.log('所有 cookies:', cookies);
-
-      // 尋找 session cookie
-      const sessionCookie = cookies.find(cookie => 
-        cookie.name === 'next-auth.session-token' ||
-        cookie.name === '__Secure-next-auth.session-token' ||
-        cookie.name === '__Host-next-auth.session-token'
-      );
-
-      if (sessionCookie) {
-        console.log('找到 session cookie:', sessionCookie);
-
-        // 構建 cookie header
-        const cookieHeader = `${sessionCookie.name}=${sessionCookie.value}`;
-        console.log('發送的 cookie header:', cookieHeader);
-
-        // 驗證 session
-        const response = await fetch(`http://localhost:${port}/api/auth/session`, {
-          method: 'GET',
-          headers: {
-            'Cookie': cookieHeader,
-            'Accept': 'application/json'
-          },
-          credentials: 'include'
-        });
-
-        console.log('session 響應狀態:', response.status);
-        const sessionData = await response.json();
-        console.log('session 響應數據:', sessionData);
-
-        if (sessionData && sessionData.user) {
-          console.log('登入狀態：已登入', sessionData.user);
-          return sessionData.user;
-        }
-      } else {
-        console.log('找不到 session cookie');
-      }
+      console.log('開始檢查登入狀態，端口:', port);
       
-      console.log('登入狀態：未登入');
+      const sessionCookies = await getSessionCookies();
+      
+      if (!sessionCookies || sessionCookies.length === 0) {
+        console.log('找不到任何 session cookies');
+        hideExtractButtons();
+        return null;
+      }
+
+      console.log('找到 session cookies:', sessionCookies);
+      const cookieString = buildCookieString(sessionCookies);
+
+      // 驗證 session
+      const response = await fetch(`http://localhost:${port}/api/auth/session`, {
+        headers: {
+          'Cookie': cookieString
+        },
+        credentials: 'include'
+      });
+
+      console.log('session 響應狀態:', response.status);
+      const data = await response.json();
+      console.log('session 響應數據:', data);
+
+      if (data.user) {
+        console.log('用戶已登入:', data.user);
+        showExtractButtons();
+        return { user: data.user, cookieString };
+      }
+
+      console.log('session 無效');
+      hideExtractButtons();
       return null;
     } catch (error) {
       console.error('檢查登入狀態時發生錯誤:', error);
+      hideExtractButtons();
       return null;
-    }
-  }
-
-  // 儲存到 SuperBrain
-  async function saveToSuperbrain(data, port) {
-    try {
-      const cookies = await chrome.cookies.getAll({
-        domain: 'localhost'
-      });
-      
-      const sessionCookie = cookies.find(cookie => 
-        cookie.name === 'next-auth.session-token' ||
-        cookie.name === '__Secure-next-auth.session-token' ||
-        cookie.name === '__Host-next-auth.session-token'
-      );
-
-      if (!sessionCookie) {
-        throw new Error('請重新登入');
-      }
-
-      const cookieHeader = `${sessionCookie.name}=${sessionCookie.value}`;
-
-      const response = await fetch(`http://localhost:${port}/api/content/save`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Cookie': cookieHeader,
-          'Accept': 'application/json'
-        },
-        credentials: 'include',
-        body: JSON.stringify(data)
-      });
-
-      if (!response.ok) {
-        if (response.status === 401) {
-          throw new Error('請重新登入');
-        }
-        throw new Error('儲存失敗');
-      }
-
-      return await response.json();
-    } catch (error) {
-      throw error;
     }
   }
 
   try {
-    // 檢查可用的伺服器端口
     const port = await checkServer();
-    console.log('使用端口:', port);
-    
-    // 檢查登入狀態
-    const user = await checkLoginStatus(port);
-    console.log('用戶信息:', user);
+    const authData = await checkLoginStatus(port);
 
-    if (user) {
-      // 用戶已登入
-      statusContainer.textContent = `歡迎回來，${user.name || user.email || 'User'}！`;
-      loginButton.style.display = 'none';
-      extractFullButton.style.display = 'block';
-      extractSelectedButton.style.display = 'block';
+    if (authData && authData.user) {
+      statusContainer.textContent = `歡迎回來，${authData.user.name || authData.user.email}！`;
+      showExtractButtons();
 
-      // 擷取全部內容的按鈕事件
+      // 設置擷取按鈕事件
       extractFullButton.addEventListener('click', async () => {
         try {
-          statusContainer.textContent = '正在擷取內容...';
           const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-          const result = await chrome.scripting.executeScript({
+          
+          const [{ result }] = await chrome.scripting.executeScript({
             target: { tabId: tab.id },
             function: () => {
-              // 移除不必要的元素
-              const elementsToRemove = document.querySelectorAll('script, style, iframe, nav, header, footer, .ad, .advertisement, .social-share');
+              const elementsToRemove = document.querySelectorAll('header, footer, nav, script, style, iframe, .ad, .advertisement, .social-share');
               elementsToRemove.forEach(el => el.remove());
               
-              // 獲取主要內容
-              const article = document.querySelector('article') || document.querySelector('main') || document.body;
+              const article = document.querySelector('article') || document.body;
               return {
                 title: document.title,
-                url: window.location.href,
-                content: article.innerText.trim()
+                content: article.innerText
               };
             }
           });
 
-          if (result && result[0].result) {
-            const data = result[0].result;
-            statusContainer.textContent = '內容擷取成功！正在儲存...';
-            
-            const saveResult = await saveToSuperbrain(data, port);
-            statusContainer.textContent = '內容已成功儲存！';
-            setTimeout(() => {
-              window.close();
-            }, 2000);
+          // 重新獲取最新的 cookies 以確保 session 有效
+          const sessionCookies = await getSessionCookies();
+          if (!sessionCookies || sessionCookies.length === 0) {
+            throw new Error('未登入');
           }
-        } catch (error) {
-          console.error('擷取內容時發生錯誤:', error);
-          statusContainer.textContent = `錯誤：${error.message}`;
-          if (error.message === '請重新登入') {
-            loginButton.style.display = 'block';
-            extractFullButton.style.display = 'none';
-            extractSelectedButton.style.display = 'none';
-          }
-        }
-      });
+          const cookieString = buildCookieString(sessionCookies);
 
-      // 擷取選取內容的按鈕事件
-      extractSelectedButton.addEventListener('click', async () => {
-        try {
-          statusContainer.textContent = '正在擷取選取內容...';
-          const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-          const result = await chrome.scripting.executeScript({
-            target: { tabId: tab.id },
-            function: () => {
-              const selectedText = window.getSelection().toString().trim();
-              return {
-                title: document.title,
-                url: window.location.href,
-                content: selectedText
-              };
-            }
+          console.log('發送內容到 API，使用 cookies:', cookieString);
+          const response = await fetch(`http://localhost:${port}/api/content`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Cookie': cookieString
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+              url: tab.url,
+              title: result.title,
+              content: result.content
+            })
           });
 
-          if (result && result[0].result) {
-            const data = result[0].result;
-            if (data.content) {
-              statusContainer.textContent = '內容擷取成功！正在儲存...';
-              
-              const saveResult = await saveToSuperbrain(data, port);
-              statusContainer.textContent = '內容已成功儲存！';
-              setTimeout(() => {
-                window.close();
-              }, 2000);
-            } else {
-              statusContainer.textContent = '請先選取要擷取的文字內容';
-            }
+          console.log('API 響應狀態:', response.status);
+          
+          if (!response.ok) {
+            const errorData = await response.json();
+            console.error('API 錯誤響應:', errorData);
+            throw new Error(errorData.error || '儲存失敗');
           }
+
+          const responseData = await response.json();
+          console.log('API 成功響應:', responseData);
+
+          statusContainer.textContent = '內容已成功儲存！';
+          setTimeout(() => window.close(), 2000);
         } catch (error) {
-          console.error('擷取選取內容時發生錯誤:', error);
+          console.error('獲取內容發生錯誤:', error);
           statusContainer.textContent = `錯誤：${error.message}`;
-          if (error.message === '請重新登入') {
-            loginButton.style.display = 'block';
-            extractFullButton.style.display = 'none';
-            extractSelectedButton.style.display = 'none';
-          }
         }
       });
 
     } else {
-      // 用戶未登入
       statusContainer.textContent = '您尚未登入';
       loginButton.style.display = 'block';
-      extractFullButton.style.display = 'none';
-      extractSelectedButton.style.display = 'none';
-
       loginButton.addEventListener('click', () => {
         chrome.tabs.create({ url: `http://localhost:${port}/auth/signin` });
       });
     }
   } catch (error) {
     console.error('Error:', error);
-    statusContainer.textContent = error.message || '發生錯誤，請稍後再試';
-    if (error.message === '無法連接到 SuperBrain 伺服器') {
-      loginButton.style.display = 'none';
-      extractFullButton.style.display = 'none';
-      extractSelectedButton.style.display = 'none';
-    }
+    statusContainer.textContent = error.message;
   }
 }); 
