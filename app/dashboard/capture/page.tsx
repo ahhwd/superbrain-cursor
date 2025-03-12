@@ -40,6 +40,7 @@ export default function CapturePage() {
     limit: 20,
     totalPages: 0
   });
+  const [updatingContentId, setUpdatingContentId] = useState<string | null>(null);
 
   const fetchContents = async (page = 1) => {
     try {
@@ -83,6 +84,41 @@ export default function CapturePage() {
     if (newPage >= 1 && newPage <= pagination.totalPages) {
       setPagination(prev => ({ ...prev, page: newPage }));
       fetchContents(newPage);
+    }
+  };
+
+  const handleUpdateSummary = async (contentId: string) => {
+    try {
+      setUpdatingContentId(contentId);
+      const response = await fetch('/api/content/update-summary', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ contentId }),
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || '更新摘要失敗');
+      }
+      
+      // 更新本地狀態
+      setContents(prevContents => 
+        prevContents.map(content => 
+          content.id === contentId 
+            ? { ...content, summary: data.summary, category: data.category } 
+            : content
+        )
+      );
+      
+      alert('摘要和分類已更新');
+    } catch (err) {
+      console.error('更新摘要時發生錯誤:', err);
+      alert(`更新摘要失敗: ${err instanceof Error ? err.message : '未知錯誤'}`);
+    } finally {
+      setUpdatingContentId(null);
     }
   };
 
@@ -186,6 +222,11 @@ export default function CapturePage() {
               <p className="text-gray-600 mb-4">
                 在這裡您可以查看所有已經擷取的網頁內容和筆記。
               </p>
+              <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
+                <p className="text-yellow-700">
+                  <strong>注意：</strong> 要使用 AI 生成摘要和分類功能，請在 <code>.env</code> 文件中設置您的 OpenAI API 密鑰。
+                </p>
+              </div>
             </div>
 
             <div className="bg-white shadow-lg rounded-lg p-6">
@@ -216,13 +257,28 @@ export default function CapturePage() {
               ) : (
                 <>
                   <div className="space-y-6">
-                    {contents.map((content) => (
+                    {contents.map((content) => {
+                      console.log('渲染內容:', content.id, '摘要:', content.summary, '分類:', content.category);
+                      return (
                       <div key={content.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                        <h3 className="text-lg font-medium mb-2">
-                          <a href={content.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-                            {content.title}
-                          </a>
-                        </h3>
+                        <div className="flex justify-between items-start">
+                          <h3 className="text-lg font-medium mb-2">
+                            <a href={content.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                              {content.title}
+                            </a>
+                          </h3>
+                          <button
+                            onClick={() => handleUpdateSummary(content.id)}
+                            disabled={updatingContentId === content.id}
+                            className={`px-3 py-1 text-xs rounded-md ${
+                              updatingContentId === content.id
+                                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                : 'bg-blue-500 text-white hover:bg-blue-600'
+                            }`}
+                          >
+                            {updatingContentId === content.id ? '更新中...' : '更新摘要'}
+                          </button>
+                        </div>
                         <div className="flex flex-wrap gap-2 mb-2">
                           {content.category && (
                             <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
@@ -238,10 +294,20 @@ export default function CapturePage() {
                             <p className="text-gray-700 mb-2 font-medium">摘要：</p>
                             <p className="text-gray-700 mb-4">{content.summary}</p>
                           </>
-                        ) : null}
+                        ) : (
+                          <p className="text-gray-500 italic mb-4">尚未生成摘要</p>
+                        )}
                         <p className="text-gray-700 line-clamp-3">{content.content}</p>
+                        
+                        {/* 調試信息 */}
+                        <details className="mt-4 text-xs text-gray-500">
+                          <summary>調試信息</summary>
+                          <pre className="mt-2 p-2 bg-gray-100 rounded overflow-auto">
+                            {JSON.stringify({id: content.id, summary: content.summary, category: content.category}, null, 2)}
+                          </pre>
+                        </details>
                       </div>
-                    ))}
+                    )})}
                   </div>
                   
                   {/* 分頁控制 */}
