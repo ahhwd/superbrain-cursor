@@ -17,7 +17,6 @@ export default function Home() {
               <span className="text-2xl font-bold text-blue-600">{t('app_name')}</span>
             </div>
             <div className="flex items-center space-x-4">
-              <LanguageSwitcher className="mr-4" />
               <Link href="/auth/signin" className="px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition-colors">
                 {t('nav_login')}
               </Link>
@@ -159,16 +158,19 @@ export default function Home() {
               <span className="text-xl font-bold text-white">{t('app_name')}</span>
               <p className="mt-2">{t('footer_description')}</p>
             </div>
-            <div className="flex space-x-6">
-              <Link href="/auth/signin" className="hover:text-white transition-colors">
-                {t('nav_login')}
-              </Link>
-              <Link href="/auth/register" className="hover:text-white transition-colors">
-                {t('nav_register')}
-              </Link>
-              <a href="#features" className="hover:text-white transition-colors">
-                {t('nav_features')}
-              </a>
+            <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6">
+              <div className="flex space-x-6">
+                <Link href="/auth/signin" className="hover:text-white transition-colors">
+                  {t('nav_login')}
+                </Link>
+                <Link href="/auth/register" className="hover:text-white transition-colors">
+                  {t('nav_register')}
+                </Link>
+                <a href="#features" className="hover:text-white transition-colors">
+                  {t('nav_features')}
+                </a>
+              </div>
+              <LanguageSwitcher className="mt-4 md:mt-0" />
             </div>
           </div>
           <div className="mt-6 pt-6 border-t border-gray-700 text-center text-sm">
