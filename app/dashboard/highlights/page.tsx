@@ -273,7 +273,11 @@ export default function HighlightsPage() {
                 )}
                 
                 <div className="prose max-w-none text-gray-700">
-                  <p>{highlight.content}</p>
+                  {highlight.content.split('\n').map((paragraph, index) => (
+                    paragraph.trim() ? (
+                      <p key={index} className="mb-4">{paragraph}</p>
+                    ) : null
+                  ))}
                 </div>
                 
                 <div className="mt-4 flex justify-between items-center">
