@@ -13,15 +13,15 @@ export default function DashboardPage() {
   ];
 
   return (
-    <div className="w-full max-w-full overflow-x-hidden">
-      <div className="bg-white shadow-lg rounded-lg p-4 sm:p-6 mb-4 sm:mb-6 mx-2 sm:mx-auto">
+    <div className="w-full">
+      <div className="bg-white shadow-lg rounded-lg p-4 sm:p-6 mb-4 sm:mb-6">
         <h1 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-4">歡迎使用 SuperBrain</h1>
         <p className="text-gray-600 text-sm sm:text-base">
           您的個人知識管理助手，幫助您整理和管理網頁內容。
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mx-2 sm:mx-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {menuItems.map((item) => (
           <Link
             key={item.name}

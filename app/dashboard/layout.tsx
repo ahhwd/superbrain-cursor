@@ -28,7 +28,7 @@ export default function DashboardLayout({
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100 w-full max-w-full overflow-hidden">
       {/* 移動端導航欄 */}
       <MobileNavbar />
       
@@ -37,7 +37,7 @@ export default function DashboardLayout({
         <Sidebar className="w-64 min-h-screen sticky top-0 hidden md:block" />
         
         {/* 主要內容區域 - 在移動端添加頂部間距 */}
-        <div className="flex-1 py-6 px-4 md:pt-6 pt-20">
+        <div className="flex-1 py-6 px-0 md:px-4 md:pt-6 pt-20 w-full">
           {children}
         </div>
       </div>

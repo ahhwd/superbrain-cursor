@@ -3,6 +3,7 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import Sidebar from "../components/Sidebar";
 
 interface Content {
   id: string;
@@ -23,7 +24,12 @@ interface Pagination {
 
 export default function CapturePage() {
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession({
+    required: true,
+    onUnauthenticated() {
+      router.push('/auth/signin');
+    },
+  });
 
   const [contents, setContents] = useState<Content[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -116,6 +122,14 @@ export default function CapturePage() {
     }
   };
 
+  if (status === "loading") {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+      </div>
+    );
+  }
+
   // 生成頁碼按鈕
   const renderPaginationButtons = () => {
     const buttons = [];
@@ -195,15 +209,15 @@ export default function CapturePage() {
   };
 
   return (
-    <div className="w-full max-w-full overflow-x-hidden">
-      <div className="bg-white shadow-lg rounded-lg p-4 sm:p-6 mb-4 sm:mb-6 mx-2 sm:mx-auto">
+    <div className="w-full">
+      <div className="bg-white shadow-lg rounded-lg p-4 sm:p-6 mb-4 sm:mb-6">
         <h1 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-4">已擷取內容</h1>
         <p className="text-gray-600 text-sm sm:text-base mb-2 sm:mb-4">
           您可以查看所有已經擷取的網頁內容，以及 AI 產生的摘要
         </p>
       </div>
 
-      <div className="bg-white shadow-lg rounded-lg p-4 sm:p-6 mx-2 sm:mx-auto">
+      <div className="bg-white shadow-lg rounded-lg p-4 sm:p-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
           <h2 className="text-lg sm:text-xl font-semibold mb-2 sm:mb-0">已擷取內容</h2>
           {pagination.total > 0 && (
@@ -234,8 +248,8 @@ export default function CapturePage() {
               {contents.map((content) => {
                 return (
                 <div key={content.id} className="border rounded-lg p-3 sm:p-4 hover:shadow-md transition-shadow">
-                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start">
-                    <h3 className="text-base sm:text-lg font-medium mb-2 break-words">
+                  <div className="flex justify-between items-start">
+                    <h3 className="text-base sm:text-lg font-medium mb-2 break-words pr-2 flex-1">
                       <a href={content.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
                         {content.title}
                       </a>
@@ -243,7 +257,7 @@ export default function CapturePage() {
                     <button
                       onClick={() => handleUpdateSummary(content.id)}
                       disabled={updatingContentId === content.id}
-                      className={`px-3 py-1 text-xs rounded-md mt-1 sm:mt-0 ${
+                      className={`px-3 py-1 text-xs rounded-md whitespace-nowrap flex-shrink-0 ${
                         updatingContentId === content.id
                           ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                           : 'bg-blue-500 text-white hover:bg-blue-600'
