@@ -26,8 +26,7 @@ export default function Sidebar({ className = '' }: SidebarProps) {
         <div>
           {/* 網站名稱 */}
           <div className="mb-6 pb-4 border-b border-gray-200">
-            <h2 className="text-xl font-bold text-blue-700">SuperBrain</h2>
-            <p className="text-sm text-gray-600 mt-1">你的個人知識管理助手</p>
+            <h2 className="text-xl font-bold text-blue-600">SuperBrain</h2>
           </div>
           
           {/* 菜單項目 */}

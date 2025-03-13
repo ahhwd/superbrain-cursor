@@ -211,7 +211,7 @@ export default function CapturePage() {
   return (
     <div className="w-full">
       <div className="bg-white shadow-lg rounded-lg p-4 sm:p-6 mb-4 sm:mb-6">
-        <h1 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-4 text-gray-900">已擷取內容</h1>
+        <h1 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-4">已擷取內容</h1>
         <p className="text-gray-600 text-sm sm:text-base mb-2 sm:mb-4">
           您可以查看所有已經擷取的網頁內容，以及 AI 產生的摘要
         </p>
@@ -219,7 +219,7 @@ export default function CapturePage() {
 
       <div className="bg-white shadow-lg rounded-lg p-4 sm:p-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
-          <h2 className="text-lg sm:text-xl font-semibold mb-2 sm:mb-0 text-gray-900">已擷取內容</h2>
+          <h2 className="text-lg sm:text-xl font-semibold mb-2 sm:mb-0">已擷取內容</h2>
           {pagination.total > 0 && (
             <p className="text-gray-500 text-xs sm:text-sm">
               共 {pagination.total} 筆記錄，第 {pagination.page} 頁，共 {pagination.totalPages} 頁
@@ -254,6 +254,17 @@ export default function CapturePage() {
                         {content.title}
                       </a>
                     </h3>
+                    <button
+                      onClick={() => handleUpdateSummary(content.id)}
+                      disabled={updatingContentId === content.id}
+                      className={`px-3 py-1 text-xs rounded-md whitespace-nowrap flex-shrink-0 ${
+                        updatingContentId === content.id
+                          ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                          : 'bg-blue-500 text-white hover:bg-blue-600'
+                      }`}
+                    >
+                      {updatingContentId === content.id ? '更新中...' : '更新摘要'}
+                    </button>
                   </div>
                   <div className="flex flex-wrap gap-2 mb-2">
                     {content.category && (
@@ -278,6 +289,14 @@ export default function CapturePage() {
                     <p className="text-gray-700 mb-1 sm:mb-2 font-medium">擷取內容：</p>
                     <p className="text-gray-700 text-sm sm:text-base line-clamp-3">{content.content}</p>
                   </div>
+                  
+                  {/* 調試信息 */}
+                  <details className="mt-3 sm:mt-4 text-xs text-gray-500">
+                    <summary>調試信息</summary>
+                    <pre className="mt-2 p-2 bg-gray-100 rounded overflow-x-auto text-xs">
+                      {JSON.stringify({id: content.id, summary: content.summary, category: content.category}, null, 2)}
+                    </pre>
+                  </details>
                 </div>
               )})}
             </div>

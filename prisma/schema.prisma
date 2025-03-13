@@ -42,7 +42,6 @@ model User {
   image             String?
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
-  lastVisitedHighlights DateTime?
   accounts          Account[]
   contents          Content[]
   savedContents     SavedContent[]

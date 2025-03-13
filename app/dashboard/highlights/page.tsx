@@ -90,6 +90,21 @@ export default function HighlightsPage() {
       <h1 className="text-2xl font-bold mb-6 text-gray-900">精華筆記</h1>
       <p className="text-gray-600 mb-6">AI 將您儲存的擷取內容自動整理成不同主題的精華筆記</p>
       
+      {/* 測試元素 */}
+      <div className="mb-6">
+        <div style={{
+          backgroundColor: '#3b82f6',
+          color: 'white',
+          fontWeight: 'bold',
+          padding: '4px 12px',
+          borderRadius: '6px',
+          display: 'inline-block',
+          marginBottom: '16px'
+        }}>
+          測試分類標籤
+        </div>
+      </div>
+      
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
           {error}
@@ -126,7 +141,7 @@ export default function HighlightsPage() {
                         display: 'inline-block',
                         marginRight: '8px'
                       }}>
-                        {highlight.category}
+                        經濟學
                       </div>
                       <span>{highlight.title}</span>
                     </div>
@@ -140,7 +155,7 @@ export default function HighlightsPage() {
                         borderRadius: '6px',
                         display: 'inline-block'
                       }}>
-                        {highlight.category}
+                        經濟學
                       </div>
                       <span className="text-gray-900 ml-2">精華筆記</span>
                     </div>

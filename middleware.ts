@@ -18,9 +18,9 @@ export async function middleware(request: NextRequest) {
       request.nextUrl.pathname.startsWith("/auth/signin") ||
       request.nextUrl.pathname.startsWith("/auth/register");
 
-    // 如果用戶已登入且訪問登入/註冊頁面，重定向到儀表板
-    if (token && isAuthPage) {
-      console.log('已登入用戶訪問認證頁面，重定向到儀表板');
+    // 如果用戶已登入且訪問首頁或登入/註冊頁面，重定向到儀表板
+    if (token && (request.nextUrl.pathname === "/" || isAuthPage)) {
+      console.log('已登入用戶訪問首頁或認證頁面，重定向到儀表板');
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
 
@@ -43,5 +43,5 @@ export async function middleware(request: NextRequest) {
 
 // 配置需要進行中間件檢查的路徑
 export const config = {
-  matcher: ["/dashboard/:path*", "/auth/:path*"],
+  matcher: ["/", "/dashboard/:path*", "/auth/:path*"],
 }; 
