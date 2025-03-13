@@ -74,15 +74,6 @@ export default function Home() {
                 <text x="200" y="30" textAnchor="middle" fill="#3b82f6" fontWeight="bold" fontSize="14">知識整理示意圖</text>
               </svg>
             </div>
-            
-            <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-              <Link href="/auth/register" className="px-6 py-3 rounded-lg bg-blue-600 text-white text-center font-medium hover:bg-blue-700 transition-colors">
-                免費註冊
-              </Link>
-              <Link href="#features" className="px-6 py-3 rounded-lg border border-gray-300 text-gray-700 text-center font-medium hover:bg-gray-50 transition-colors">
-                了解更多
-              </Link>
-            </div>
           </div>
         </div>
       </section>
