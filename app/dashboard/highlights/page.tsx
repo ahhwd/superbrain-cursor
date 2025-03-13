@@ -126,7 +126,7 @@ export default function HighlightsPage() {
                         display: 'inline-block',
                         marginRight: '8px'
                       }}>
-                        經濟學
+                        {highlight.category}
                       </div>
                       <span>{highlight.title}</span>
                     </div>
@@ -140,7 +140,7 @@ export default function HighlightsPage() {
                         borderRadius: '6px',
                         display: 'inline-block'
                       }}>
-                        經濟學
+                        {highlight.category}
                       </div>
                       <span className="text-gray-900 ml-2">精華筆記</span>
                     </div>
