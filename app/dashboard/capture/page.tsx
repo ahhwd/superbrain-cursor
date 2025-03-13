@@ -297,6 +297,8 @@ export default function CapturePage() {
                         ) : (
                           <p className="text-gray-500 italic mb-4">尚未生成摘要</p>
                         )}
+                        
+                        <p className="text-gray-700 mb-2 font-medium">擷取筆記：</p>
                         <p className="text-gray-700 line-clamp-3">{content.content}</p>
                         
                         {/* 調試信息 */}
