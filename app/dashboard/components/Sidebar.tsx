@@ -10,7 +10,7 @@ export default function Sidebar({ className = '' }: SidebarProps) {
   const pathname = usePathname();
   
   const menuItems = [
-    { name: '首頁', href: '/dashboard', icon: 'home' },
+    { name: '儀表板', href: '/dashboard', icon: 'home' },
     { name: '精華筆記', href: '/dashboard/highlights', icon: 'star' },
     { name: '擷取內容', href: '/dashboard/capture', icon: 'capture' },
     { name: '帳號管理', href: '/dashboard/account', icon: 'user' },
