@@ -45,13 +45,12 @@ export default function Home() {
             </div>
             <div className="md:w-1/2 px-4 md:px-0">
               <div className="relative h-80 sm:h-96 w-full rounded-lg shadow-xl overflow-hidden border border-gray-200">
-                <div className="absolute inset-0 bg-blue-50 flex items-center justify-center p-6">
-                  <Image 
+                <div className="absolute inset-0 bg-blue-50 flex items-center justify-center p-4">
+                  <img 
                     src="/images/superbrain-diagram.png" 
                     alt="SuperBrain 知識整理示意圖" 
-                    width={500} 
-                    height={300} 
-                    className="object-contain"
+                    className="max-w-full max-h-full object-contain"
+                    style={{ width: 'auto', height: 'auto' }}
                   />
                 </div>
               </div>
