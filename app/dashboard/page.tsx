@@ -48,7 +48,7 @@ export default function DashboardPage() {
               <ul className="list-none space-y-3 text-gray-700">
                 <li className="flex items-start">
                   <span className="font-medium mr-2">精華筆記：</span>
-                  <span>AI 針對您擷取的內容自動整理成多篇經抓筆記</span>
+                  <span>AI 針對您擷取的內容自動整理成多篇精華筆記</span>
                 </li>
                 <li className="flex items-start">
                   <span className="font-medium mr-2">擷取內容：</span>
