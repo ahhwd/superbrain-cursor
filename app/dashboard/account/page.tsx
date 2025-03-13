@@ -14,7 +14,7 @@ export default function AccountPage() {
         </p>
       </div>
 
-      <div className="bg-white shadow-lg rounded-lg p-4 sm:p-6">
+      <div className="bg-white shadow-lg rounded-lg p-4 sm:p-6 mb-4 sm:mb-6">
         <h2 className="text-lg sm:text-xl font-semibold mb-4 text-gray-900">個人資料</h2>
         
         <div className="space-y-4">
@@ -26,6 +26,22 @@ export default function AccountPage() {
           <div>
             <p className="text-sm sm:text-base text-gray-600 font-medium">名稱</p>
             <p className="text-sm sm:text-base">{session?.user?.name || '未設定'}</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white shadow-lg rounded-lg p-4 sm:p-6">
+        <h2 className="text-lg sm:text-xl font-semibold mb-4 text-gray-900">帳號</h2>
+        
+        <div className="space-y-4">
+          <div className="flex items-center">
+            <button 
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+              disabled
+            >
+              升級到 Pro 版本
+            </button>
+            <span className="ml-3 text-sm text-gray-500 italic">(即將推出)</span>
           </div>
         </div>
       </div>
