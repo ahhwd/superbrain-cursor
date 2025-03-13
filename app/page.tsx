@@ -23,18 +23,18 @@ export default function Home() {
       </header>
 
       {/* 簡化的英雄區塊 */}
-      <section className="pt-24 pb-16 bg-gradient-to-b from-blue-50 to-white">
+      <section className="pt-24 pb-6 bg-gradient-to-b from-blue-50 to-white">
         <div className="container mx-auto px-4">
           <div className="text-center">
             <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
               將您的知識整理成<span className="text-blue-600">精華筆記</span>
             </h1>
-            <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+            <p className="text-lg text-gray-600 mb-6 max-w-2xl mx-auto">
               SuperBrain 使用 AI 自動將您擷取的網頁內容整理成不同主題的精華筆記，讓您輕鬆掌握重要知識。
             </p>
             
             {/* 示意圖 - 使用內聯 SVG */}
-            <div className="max-w-md mx-auto mb-8 p-4">
+            <div className="max-w-md mx-auto mb-0 p-2">
               <svg viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg" className="w-full">
                 {/* 中央大腦圖示 */}
                 <circle cx="200" cy="110" r="40" fill="#dbeafe" stroke="#3b82f6" strokeWidth="2" />
@@ -79,10 +79,10 @@ export default function Home() {
       </section>
 
       {/* 功能區塊 */}
-      <section id="features" className="py-16 bg-white">
+      <section id="features" className="py-10 bg-white">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">SuperBrain 的強大功能</h2>
+          <div className="text-center mb-8">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">SuperBrain 的強大功能</h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               讓 AI 幫您整理知識，提高學習和工作效率
             </p>
