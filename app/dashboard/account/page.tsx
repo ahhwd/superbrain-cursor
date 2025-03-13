@@ -1,9 +1,34 @@
 "use client";
 
 import { useSession } from "next-auth/react";
+import { useState, useEffect } from "react";
+import { prisma } from "@/lib/prisma";
 
 export default function AccountPage() {
   const { data: session } = useSession();
+  const [monthlyCaptures, setMonthlyCaptures] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    async function fetchUsageData() {
+      if (session?.user?.email) {
+        try {
+          setLoading(true);
+          const response = await fetch('/api/account/usage');
+          if (response.ok) {
+            const data = await response.json();
+            setMonthlyCaptures(data.monthlyCaptures);
+          }
+        } catch (error) {
+          console.error("獲取使用量數據時出錯:", error);
+        } finally {
+          setLoading(false);
+        }
+      }
+    }
+
+    fetchUsageData();
+  }, [session]);
 
   return (
     <div className="w-full">
@@ -12,6 +37,21 @@ export default function AccountPage() {
         <p className="text-gray-600 text-sm sm:text-base">
           管理您的帳號設定和個人資料。
         </p>
+      </div>
+
+      <div className="bg-white shadow-lg rounded-lg p-4 sm:p-6 mb-4 sm:mb-6">
+        <h2 className="text-lg sm:text-xl font-semibold mb-4 text-gray-900">使用量</h2>
+        
+        <div className="space-y-4">
+          <div>
+            <p className="text-sm sm:text-base text-gray-600 font-medium">本月擷取網頁數量</p>
+            {loading ? (
+              <p className="text-sm sm:text-base">載入中...</p>
+            ) : (
+              <p className="text-sm sm:text-base font-semibold">{monthlyCaptures} 頁</p>
+            )}
+          </div>
+        </div>
       </div>
 
       <div className="bg-white shadow-lg rounded-lg p-4 sm:p-6 mb-4 sm:mb-6">
