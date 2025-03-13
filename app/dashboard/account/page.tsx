@@ -20,12 +20,12 @@ export default function AccountPage() {
         <div className="space-y-4">
           <div>
             <p className="text-sm sm:text-base text-gray-600 font-medium">電子郵件</p>
-            <p className="text-sm sm:text-base">{session?.user?.email}</p>
+            <p className="text-sm sm:text-base text-gray-800">{session?.user?.email}</p>
           </div>
           
           <div>
             <p className="text-sm sm:text-base text-gray-600 font-medium">名稱</p>
-            <p className="text-sm sm:text-base">{session?.user?.name || '未設定'}</p>
+            <p className="text-sm sm:text-base text-gray-800">{session?.user?.name || '未設定'}</p>
           </div>
         </div>
       </div>
