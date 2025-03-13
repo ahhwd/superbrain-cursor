@@ -49,7 +49,7 @@ export default function DashboardPage() {
                 使用左側的導航欄訪問不同功能：
               </p>
               <ul className="list-disc pl-5 mb-4 text-gray-700">
-                <li className="mb-2">在「擷取筆記」頁面查看您已擷取的所有網頁內容</li>
+                <li className="mb-2">在「擷取內容」頁面查看您已擷取的所有網頁內容</li>
                 <li className="mb-2">在「精華筆記」頁面查看您標記為重要的內容</li>
                 <li className="mb-2">在「帳號管理」頁面管理您的個人資料</li>
               </ul>
