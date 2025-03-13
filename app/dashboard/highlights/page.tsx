@@ -14,6 +14,12 @@ interface Highlight {
   updatedAt: string;
 }
 
+interface SourceUrl {
+  url: string;
+  title: string;
+  createdAt: string;
+}
+
 interface Pagination {
   total: number;
   page: number;
@@ -33,6 +39,9 @@ export default function HighlightsPage() {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [sourceUrls, setSourceUrls] = useState<Record<string, SourceUrl[]>>({});
+  const [loadingSourceUrls, setLoadingSourceUrls] = useState<Record<string, boolean>>({});
+  const [showSourceUrls, setShowSourceUrls] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -64,6 +73,34 @@ export default function HighlightsPage() {
       setError("獲取精華筆記時發生錯誤");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchSourceUrls = async (category: string) => {
+    try {
+      setLoadingSourceUrls(prev => ({ ...prev, [category]: true }));
+      
+      // 如果已經獲取過，直接顯示
+      if (sourceUrls[category]) {
+        setShowSourceUrls(prev => ({ ...prev, [category]: !prev[category] }));
+        setLoadingSourceUrls(prev => ({ ...prev, [category]: false }));
+        return;
+      }
+      
+      const response = await fetch(`/api/highlights/source-url?category=${encodeURIComponent(category)}`);
+      
+      if (!response.ok) {
+        throw new Error("獲取來源 URL 失敗");
+      }
+      
+      const data = await response.json();
+      setSourceUrls(prev => ({ ...prev, [category]: data.sourceUrls }));
+      setShowSourceUrls(prev => ({ ...prev, [category]: true }));
+    } catch (err) {
+      console.error("獲取來源 URL 時發生錯誤:", err);
+      alert("獲取來源 URL 時發生錯誤");
+    } finally {
+      setLoadingSourceUrls(prev => ({ ...prev, [category]: false }));
     }
   };
 
@@ -245,9 +282,54 @@ export default function HighlightsPage() {
                   </p>
                 ))}
               </div>
-              <div className="mt-4 text-sm text-gray-500">
-                最後更新: {new Date(highlight.updatedAt).toLocaleString('zh-TW')}
+              <div className="mt-4 flex justify-between items-center">
+                <div className="text-sm text-gray-500">
+                  最後更新: {new Date(highlight.updatedAt).toLocaleString('zh-TW')}
+                </div>
+                <button 
+                  onClick={() => fetchSourceUrls(highlight.category)}
+                  className="flex items-center text-blue-600 hover:text-blue-800 text-sm"
+                  title="查看原始網頁"
+                >
+                  {loadingSourceUrls[highlight.category] ? (
+                    <span className="text-xs">載入中...</span>
+                  ) : (
+                    <>
+                      <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                      </svg>
+                      <span className="text-xs">原始網頁</span>
+                    </>
+                  )}
+                </button>
               </div>
+              
+              {/* 來源 URL 列表 */}
+              {showSourceUrls[highlight.category] && sourceUrls[highlight.category] && (
+                <div className="mt-3 border-t pt-3">
+                  <h4 className="text-sm font-medium text-gray-700 mb-2">原始網頁來源:</h4>
+                  {sourceUrls[highlight.category].length > 0 ? (
+                    <ul className="text-xs space-y-1">
+                      {sourceUrls[highlight.category].map((source, index) => (
+                        <li key={index} className="flex items-start">
+                          <span className="text-gray-500 mr-2">{index + 1}.</span>
+                          <a 
+                            href={source.url} 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="text-blue-600 hover:underline break-all"
+                            title={source.title}
+                          >
+                            {source.title || source.url}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-xs text-gray-500">沒有找到原始網頁來源</p>
+                  )}
+                </div>
+              )}
             </div>
             );
           })}
