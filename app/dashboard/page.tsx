@@ -15,7 +15,7 @@ export default function DashboardPage() {
   return (
     <div className="w-full">
       <div className="bg-white shadow-lg rounded-lg p-4 sm:p-6 mb-4 sm:mb-6">
-        <h1 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-4">歡迎使用 SuperBrain</h1>
+        <h1 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-4 text-gray-900">歡迎使用 SuperBrain</h1>
         <p className="text-gray-600 text-sm sm:text-base">
           您的個人知識管理助手，幫助您整理和管理網頁內容。
         </p>

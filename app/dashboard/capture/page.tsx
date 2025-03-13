@@ -211,7 +211,7 @@ export default function CapturePage() {
   return (
     <div className="w-full">
       <div className="bg-white shadow-lg rounded-lg p-4 sm:p-6 mb-4 sm:mb-6">
-        <h1 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-4">已擷取內容</h1>
+        <h1 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-4 text-gray-900">已擷取內容</h1>
         <p className="text-gray-600 text-sm sm:text-base mb-2 sm:mb-4">
           您可以查看所有已經擷取的網頁內容，以及 AI 產生的摘要
         </p>
@@ -219,7 +219,7 @@ export default function CapturePage() {
 
       <div className="bg-white shadow-lg rounded-lg p-4 sm:p-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
-          <h2 className="text-lg sm:text-xl font-semibold mb-2 sm:mb-0">已擷取內容</h2>
+          <h2 className="text-lg sm:text-xl font-semibold mb-2 sm:mb-0 text-gray-900">已擷取內容</h2>
           {pagination.total > 0 && (
             <p className="text-gray-500 text-xs sm:text-sm">
               共 {pagination.total} 筆記錄，第 {pagination.page} 頁，共 {pagination.totalPages} 頁
