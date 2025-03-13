@@ -111,4 +111,89 @@ ${content.substring(0, 3000)}
       category: '其他'
     };
   }
+}
+
+// 將新的擷取內容融合到精華筆記中
+export async function mergeContentToHighlight(
+  existingHighlight: string,
+  newContent: string,
+  category: string
+): Promise<{ content: string }> {
+  try {
+    console.log('開始融合新內容到精華筆記中');
+    console.log('現有精華筆記長度:', existingHighlight.length);
+    console.log('新內容長度:', newContent.length);
+    console.log('分類:', category);
+
+    // 檢查 API 密鑰
+    const apiKey = process.env.OPENAI_API_KEY;
+    console.log('API 密鑰是否存在:', !!apiKey);
+    if (apiKey) {
+      console.log('使用的 API 密鑰前綴:', apiKey.substring(0, 5) + '...');
+    }
+
+    // 構建提示詞
+    const prompt = `
+你是一個專業的內容編輯，負責將新的內容融合到現有的精華筆記中。
+請遵循以下指示：
+1. 分析現有精華筆記和新內容的主題和重點
+2. 將新內容中的重要信息融合到現有精華筆記中
+3. 避免重複信息，保持內容的連貫性和邏輯性
+4. 保持精華筆記的簡潔性，不要過度冗長
+5. 確保最終的精華筆記涵蓋所有重要信息
+
+現有精華筆記（分類：${category}）：
+${existingHighlight}
+
+新內容：
+${newContent}
+
+請提供融合後的完整精華筆記內容。
+`;
+
+    console.log('發送到 OpenAI 的提示詞長度:', prompt.length);
+
+    // 調用 OpenAI API
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: 'gpt-3.5-turbo',
+        messages: [
+          {
+            role: 'system',
+            content: '你是一個專業的內容編輯，負責將新的內容融合到現有的精華筆記中。'
+          },
+          {
+            role: 'user',
+            content: prompt
+          }
+        ],
+        temperature: 0.7,
+        max_tokens: 1000
+      })
+    });
+
+    // 處理 API 響應
+    if (!response.ok) {
+      console.error('OpenAI API 響應錯誤:', response.status, response.statusText);
+      throw new Error(`OpenAI API 響應錯誤: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    console.log('OpenAI API 響應狀態:', '成功');
+
+    // 提取生成的內容
+    const mergedContent = data.choices[0].message.content.trim();
+    console.log('融合後的內容長度:', mergedContent.length);
+
+    return { content: mergedContent };
+  } catch (error) {
+    console.error('融合內容時發生錯誤:', error);
+    // 如果發生錯誤，返回原始精華筆記
+    return { content: existingHighlight };
+  }
 } 

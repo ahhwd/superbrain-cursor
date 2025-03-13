@@ -108,6 +108,20 @@ export async function POST(req: Request) {
     }
 
     console.log('POST 請求：用戶已登入，ID:', token.sub);
+    
+    // 檢查用戶是否存在
+    const user = await prisma.user.findUnique({
+      where: { id: token.sub as string }
+    });
+
+    if (!user) {
+      console.log('找不到用戶，ID:', token.sub);
+      return NextResponse.json(
+        { error: "找不到用戶" },
+        { status: 404 }
+      );
+    }
+
     const { url, title, content } = await req.json();
 
     // 使用 LLM 生成摘要和分類
@@ -123,7 +137,7 @@ export async function POST(req: Request) {
         content,
         summary,
         category,
-        userId: token.sub as string,
+        userId: user.id,
       },
     });
 
