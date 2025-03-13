@@ -6,15 +6,14 @@ import { Providers } from './providers';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'SuperBrain - 您的個人知識管理助手',
-  description: 'SuperBrain 使用 AI 自動將您擷取的網頁內容整理成不同主題的精華筆記，讓您輕鬆掌握重要知識。',
+  title: 'SuperBrain - Your Personal Knowledge Assistant',
+  description: 'SuperBrain uses AI to automatically organize your captured web content into topic-based highlights, helping you easily master important knowledge.',
 };
 
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
-  userScalable: false,
 };
 
 export default function RootLayout({
@@ -23,7 +22,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="zh-TW">
+    <html lang="en">
       <body className={inter.className}>
         <Providers>{children}</Providers>
       </body>

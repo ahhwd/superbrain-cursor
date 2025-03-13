@@ -1,6 +1,10 @@
+'use client';
+
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOut } from 'next-auth/react';
+import { useTranslation } from '@/lib/useTranslation';
+import { TranslationKey } from '@/lib/translations';
 
 interface SidebarProps {
   className?: string;
@@ -9,12 +13,13 @@ interface SidebarProps {
 
 export default function Sidebar({ className = '', onNavigate }: SidebarProps) {
   const pathname = usePathname();
+  const { t } = useTranslation();
   
   const menuItems = [
-    { name: '儀表板', href: '/dashboard', icon: 'home' },
-    { name: '精華筆記', href: '/dashboard/highlights', icon: 'star' },
-    { name: '擷取內容', href: '/dashboard/capture', icon: 'capture' },
-    { name: '帳號設定', href: '/dashboard/account', icon: 'user' },
+    { key: 'sidebar_dashboard' as TranslationKey, href: '/dashboard', icon: 'home' },
+    { key: 'sidebar_highlights' as TranslationKey, href: '/dashboard/highlights', icon: 'star' },
+    { key: 'sidebar_capture' as TranslationKey, href: '/dashboard/capture', icon: 'capture' },
+    { key: 'sidebar_account' as TranslationKey, href: '/dashboard/account', icon: 'user' },
   ];
 
   const handleSignOut = () => {
@@ -31,7 +36,7 @@ export default function Sidebar({ className = '', onNavigate }: SidebarProps) {
     <div className={`bg-white shadow-lg rounded-lg p-4 flex flex-col h-full ${className}`}>
       <div className="flex flex-col h-full overflow-y-auto">
         <div className="mb-6 pb-4 border-b border-gray-200 flex-shrink-0">
-          <h2 className="text-xl font-bold text-blue-600">SuperBrain</h2>
+          <h2 className="text-xl font-bold text-blue-600">{t('app_name')}</h2>
         </div>
         
         <div className="space-y-2 flex-grow">
@@ -39,7 +44,7 @@ export default function Sidebar({ className = '', onNavigate }: SidebarProps) {
             const isActive = pathname === item.href;
             return (
               <Link
-                key={item.name}
+                key={item.key}
                 href={item.href}
                 onClick={handleNavClick}
                 className={`flex items-center p-3 rounded-lg transition-colors ${
@@ -68,7 +73,7 @@ export default function Sidebar({ className = '', onNavigate }: SidebarProps) {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                   </svg>
                 )}
-                {item.name}
+                {t(item.key)}
               </Link>
             );
           })}
@@ -82,7 +87,7 @@ export default function Sidebar({ className = '', onNavigate }: SidebarProps) {
             <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
             </svg>
-            登出
+            {t('sidebar_logout')}
           </button>
         </div>
       </div>
