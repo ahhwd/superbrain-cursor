@@ -44,9 +44,9 @@ export default function DashboardPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                 </svg>
               )}
-              <h2 className="text-lg sm:text-xl font-semibold">{item.name}</h2>
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-900">{item.name}</h2>
             </div>
-            <p className="text-gray-600 text-sm sm:text-base">{item.description}</p>
+            <p className="text-gray-700 text-sm sm:text-base">{item.description}</p>
           </Link>
         ))}
       </div>
