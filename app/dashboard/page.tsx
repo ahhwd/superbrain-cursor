@@ -45,13 +45,15 @@ export default function DashboardPage() {
               <p className="text-gray-700 mb-4">
                 SuperBrain 是您的個人知識管理助手，幫助您擷取、整理和連接知識。
               </p>
-              <p className="text-gray-700 mb-4">
-                使用左側的導航欄訪問不同功能：
-              </p>
-              <ul className="list-disc pl-5 mb-4 text-gray-700">
-                <li className="mb-2">在「擷取內容」頁面查看您已擷取的所有網頁內容</li>
-                <li className="mb-2">在「精華筆記」頁面查看您標記為重要的內容</li>
-                <li className="mb-2">在「帳號管理」頁面管理您的個人資料</li>
+              <ul className="list-none space-y-3 text-gray-700">
+                <li className="flex items-start">
+                  <span className="font-medium mr-2">精華筆記：</span>
+                  <span>AI 針對您擷取的內容自動整理成多篇經抓筆記</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="font-medium mr-2">擷取內容：</span>
+                  <span>可查看您已擷取過的所有網頁內容和摘要</span>
+                </li>
               </ul>
             </div>
           </div>
