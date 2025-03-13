@@ -195,19 +195,19 @@ export default function CapturePage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto">
-      <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
-        <h1 className="text-2xl font-bold mb-4">已擷取內容</h1>
-        <p className="text-gray-600 mb-4">
+    <div className="w-full max-w-full overflow-x-hidden">
+      <div className="bg-white shadow-lg rounded-lg p-4 sm:p-6 mb-4 sm:mb-6 mx-2 sm:mx-auto">
+        <h1 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-4">已擷取內容</h1>
+        <p className="text-gray-600 text-sm sm:text-base mb-2 sm:mb-4">
           您可以查看所有已經擷取的網頁內容，以及 AI 產生的摘要
         </p>
       </div>
 
-      <div className="bg-white shadow-lg rounded-lg p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold">已擷取內容</h2>
+      <div className="bg-white shadow-lg rounded-lg p-4 sm:p-6 mx-2 sm:mx-auto">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
+          <h2 className="text-lg sm:text-xl font-semibold mb-2 sm:mb-0">已擷取內容</h2>
           {pagination.total > 0 && (
-            <p className="text-gray-500 text-sm">
+            <p className="text-gray-500 text-xs sm:text-sm">
               共 {pagination.total} 筆記錄，第 {pagination.page} 頁，共 {pagination.totalPages} 頁
             </p>
           )}
@@ -230,13 +230,12 @@ export default function CapturePage() {
           </div>
         ) : (
           <>
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               {contents.map((content) => {
-                console.log('渲染內容:', content.id, '摘要:', content.summary, '分類:', content.category);
                 return (
-                <div key={content.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                  <div className="flex justify-between items-start">
-                    <h3 className="text-lg font-medium mb-2">
+                <div key={content.id} className="border rounded-lg p-3 sm:p-4 hover:shadow-md transition-shadow">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start">
+                    <h3 className="text-base sm:text-lg font-medium mb-2 break-words">
                       <a href={content.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
                         {content.title}
                       </a>
@@ -244,7 +243,7 @@ export default function CapturePage() {
                     <button
                       onClick={() => handleUpdateSummary(content.id)}
                       disabled={updatingContentId === content.id}
-                      className={`px-3 py-1 text-xs rounded-md ${
+                      className={`px-3 py-1 text-xs rounded-md mt-1 sm:mt-0 ${
                         updatingContentId === content.id
                           ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                           : 'bg-blue-500 text-white hover:bg-blue-600'
@@ -259,28 +258,28 @@ export default function CapturePage() {
                         {content.category}
                       </span>
                     )}
-                    <span className="text-gray-600 text-sm">
+                    <span className="text-gray-600 text-xs sm:text-sm">
                       {new Date(content.createdAt).toLocaleString()}
                     </span>
                   </div>
                   {content.summary ? (
                     <>
-                      <p className="text-gray-700 mb-2 font-medium">摘要：</p>
-                      <p className="text-gray-700 mb-4">{content.summary}</p>
+                      <p className="text-gray-700 mb-1 sm:mb-2 font-medium">摘要：</p>
+                      <p className="text-gray-700 text-sm sm:text-base mb-3 sm:mb-4">{content.summary}</p>
                     </>
                   ) : (
-                    <p className="text-gray-500 italic mb-4">尚未生成摘要</p>
+                    <p className="text-gray-500 italic text-sm sm:text-base mb-3 sm:mb-4">尚未生成摘要</p>
                   )}
                   
-                  <div className="mt-6">
-                    <p className="text-gray-700 mb-2 font-medium">擷取內容：</p>
-                    <p className="text-gray-700 line-clamp-3">{content.content}</p>
+                  <div className="mt-4 sm:mt-6">
+                    <p className="text-gray-700 mb-1 sm:mb-2 font-medium">擷取內容：</p>
+                    <p className="text-gray-700 text-sm sm:text-base line-clamp-3">{content.content}</p>
                   </div>
                   
                   {/* 調試信息 */}
-                  <details className="mt-4 text-xs text-gray-500">
+                  <details className="mt-3 sm:mt-4 text-xs text-gray-500">
                     <summary>調試信息</summary>
-                    <pre className="mt-2 p-2 bg-gray-100 rounded overflow-auto">
+                    <pre className="mt-2 p-2 bg-gray-100 rounded overflow-x-auto text-xs">
                       {JSON.stringify({id: content.id, summary: content.summary, category: content.category}, null, 2)}
                     </pre>
                   </details>
@@ -290,7 +289,7 @@ export default function CapturePage() {
             
             {/* 分頁控制 */}
             {pagination.totalPages > 1 && (
-              <div className="flex justify-center mt-8 space-x-2">
+              <div className="flex flex-wrap justify-center mt-6 sm:mt-8 gap-1 sm:gap-2">
                 {renderPaginationButtons()}
               </div>
             )}
