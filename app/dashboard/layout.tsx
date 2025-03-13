@@ -46,8 +46,8 @@ export default function DashboardLayout({
             className="fixed inset-0 bg-gray-600 bg-opacity-75"
             onClick={toggleSidebar}
           ></div>
-          <div className="fixed inset-y-0 left-0 w-64 bg-white">
-            <Sidebar className="h-screen" onNavigate={closeSidebar} />
+          <div className="fixed inset-y-0 left-0 w-64 bg-white overflow-y-auto">
+            <Sidebar className="min-h-screen" onNavigate={closeSidebar} />
           </div>
         </div>
       )}
