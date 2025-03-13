@@ -23,6 +23,11 @@ export default function DashboardLayout({
     setShowMobileSidebar(!showMobileSidebar);
   };
 
+  // 關閉側邊欄的函數
+  const closeSidebar = () => {
+    setShowMobileSidebar(false);
+  };
+
   if (status === "loading") {
     return <div>載入中...</div>;
   }
@@ -31,7 +36,7 @@ export default function DashboardLayout({
     <div className="flex min-h-screen bg-gray-50">
       {/* 桌面版側邊欄 */}
       <div className="w-64 hidden md:block">
-        <Sidebar className="h-screen sticky top-0" />
+        <Sidebar className="h-screen sticky top-0" onNavigate={closeSidebar} />
       </div>
 
       {/* 移動版側邊欄 - 條件渲染 */}
@@ -42,7 +47,7 @@ export default function DashboardLayout({
             onClick={toggleSidebar}
           ></div>
           <div className="fixed inset-y-0 left-0 w-64 bg-white">
-            <Sidebar className="h-screen" />
+            <Sidebar className="h-screen" onNavigate={closeSidebar} />
           </div>
         </div>
       )}

@@ -4,9 +4,10 @@ import { signOut } from 'next-auth/react';
 
 interface SidebarProps {
   className?: string;
+  onNavigate?: () => void;
 }
 
-export default function Sidebar({ className = '' }: SidebarProps) {
+export default function Sidebar({ className = '', onNavigate }: SidebarProps) {
   const pathname = usePathname();
   
   const menuItems = [
@@ -18,6 +19,12 @@ export default function Sidebar({ className = '' }: SidebarProps) {
 
   const handleSignOut = () => {
     signOut({ callbackUrl: "/auth/signin" });
+  };
+
+  const handleNavClick = () => {
+    if (onNavigate) {
+      onNavigate();
+    }
   };
 
   return (
@@ -37,6 +44,7 @@ export default function Sidebar({ className = '' }: SidebarProps) {
                 <Link
                   key={item.name}
                   href={item.href}
+                  onClick={handleNavClick}
                   className={`flex items-center p-3 rounded-lg transition-colors ${
                     isActive 
                       ? 'bg-blue-100 text-blue-700' 
