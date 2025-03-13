@@ -8,19 +8,24 @@ export default function AccountPage() {
   const { data: session } = useSession();
   const [monthlyCaptures, setMonthlyCaptures] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchUsageData() {
       if (session?.user?.email) {
         try {
           setLoading(true);
+          setError(null);
           const response = await fetch('/api/account/usage');
           if (response.ok) {
             const data = await response.json();
             setMonthlyCaptures(data.monthlyCaptures);
+          } else {
+            setError("無法獲取使用量數據");
           }
         } catch (error) {
           console.error("獲取使用量數據時出錯:", error);
+          setError("獲取使用量數據時出錯");
         } finally {
           setLoading(false);
         }
@@ -62,7 +67,12 @@ export default function AccountPage() {
           <div>
             <p className="text-sm sm:text-base text-gray-600 font-medium">本月擷取網頁數量</p>
             {loading ? (
-              <p className="text-sm sm:text-base">載入中...</p>
+              <div className="flex items-center space-x-2">
+                <div className="w-4 h-4 rounded-full border-2 border-blue-600 border-t-transparent animate-spin"></div>
+                <p className="text-sm sm:text-base text-gray-500">載入中...</p>
+              </div>
+            ) : error ? (
+              <p className="text-sm sm:text-base text-red-500">{error}</p>
             ) : (
               <p className="text-sm sm:text-base font-semibold">{monthlyCaptures} 頁</p>
             )}
