@@ -220,13 +220,8 @@ export default function CapturePage() {
             <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
               <h1 className="text-2xl font-bold mb-4">已擷取筆記</h1>
               <p className="text-gray-600 mb-4">
-                在這裡您可以查看所有已經擷取的網頁內容和筆記。
+                您可以查看所有已經擷取的網頁內容，以及 AI 產生的摘要
               </p>
-              <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
-                <p className="text-yellow-700">
-                  <strong>注意：</strong> 要使用 AI 生成摘要和分類功能，請在 <code>.env</code> 文件中設置您的 OpenAI API 密鑰。
-                </p>
-              </div>
             </div>
 
             <div className="bg-white shadow-lg rounded-lg p-6">
