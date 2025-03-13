@@ -44,54 +44,29 @@ export default function Home() {
               </div>
             </div>
             <div className="md:w-1/2 px-4 md:px-0">
-              <div className="relative h-80 sm:h-96 w-full rounded-lg shadow-xl overflow-hidden border border-gray-200">
-                <div className="absolute inset-0 bg-blue-50 flex items-center justify-center p-4">
-                  {/* 使用內聯 SVG 替代外部 PNG 圖片 */}
-                  <svg 
-                    viewBox="0 0 800 500" 
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="w-full h-full max-w-md"
-                  >
-                    <rect x="50" y="50" width="700" height="400" rx="20" fill="#e6f0ff" stroke="#3b82f6" strokeWidth="2" />
-                    
-                    {/* 中央大腦圖示 */}
-                    <circle cx="400" cy="250" r="80" fill="#dbeafe" stroke="#3b82f6" strokeWidth="2" />
-                    <path d="M400 190 L400 310 M370 220 L430 280 M370 280 L430 220" stroke="#3b82f6" strokeWidth="3" />
-                    
-                    {/* 連接線和節點 */}
-                    <circle cx="200" cy="150" r="10" fill="#3b82f6" />
-                    <line x1="220" y1="160" x2="350" y2="210" stroke="#3b82f6" strokeWidth="2" strokeDasharray="5,5" />
-                    
-                    <circle cx="600" cy="150" r="10" fill="#3b82f6" />
-                    <line x1="580" y1="160" x2="450" y2="210" stroke="#3b82f6" strokeWidth="2" strokeDasharray="5,5" />
-                    
-                    <circle cx="200" cy="350" r="10" fill="#3b82f6" />
-                    <line x1="220" y1="340" x2="350" y2="290" stroke="#3b82f6" strokeWidth="2" strokeDasharray="5,5" />
-                    
-                    <circle cx="600" cy="350" r="10" fill="#3b82f6" />
-                    <line x1="580" y1="340" x2="450" y2="290" stroke="#3b82f6" strokeWidth="2" strokeDasharray="5,5" />
-                    
-                    {/* 文本框 */}
-                    <rect x="120" y="120" width="160" height="60" rx="5" fill="white" stroke="#3b82f6" strokeWidth="1" />
-                    <line x1="140" y1="140" x2="260" y2="140" stroke="#3b82f6" strokeWidth="1" />
-                    <line x1="140" y1="160" x2="240" y2="160" stroke="#3b82f6" strokeWidth="1" />
-                    
-                    <rect x="520" y="120" width="160" height="60" rx="5" fill="white" stroke="#3b82f6" strokeWidth="1" />
-                    <line x1="540" y1="140" x2="660" y2="140" stroke="#3b82f6" strokeWidth="1" />
-                    <line x1="540" y1="160" x2="640" y2="160" stroke="#3b82f6" strokeWidth="1" />
-                    
-                    <rect x="120" y="320" width="160" height="60" rx="5" fill="white" stroke="#3b82f6" strokeWidth="1" />
-                    <line x1="140" y1="340" x2="260" y2="340" stroke="#3b82f6" strokeWidth="1" />
-                    <line x1="140" y1="360" x2="240" y2="360" stroke="#3b82f6" strokeWidth="1" />
-                    
-                    <rect x="520" y="320" width="160" height="60" rx="5" fill="white" stroke="#3b82f6" strokeWidth="1" />
-                    <line x1="540" y1="340" x2="660" y2="340" stroke="#3b82f6" strokeWidth="1" />
-                    <line x1="540" y1="360" x2="640" y2="360" stroke="#3b82f6" strokeWidth="1" />
-                    
-                    {/* 標題 */}
-                    <text x="400" y="80" textAnchor="middle" fill="#3b82f6" fontWeight="bold" fontSize="24">SuperBrain</text>
-                    <text x="400" y="110" textAnchor="middle" fill="#3b82f6" fontSize="16">將您的知識整理成精華筆記</text>
-                  </svg>
+              <div className="relative h-80 sm:h-96 w-full rounded-lg shadow-xl overflow-hidden border border-gray-200 bg-blue-50">
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+                  <div className="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-2xl font-bold text-blue-600 mb-2">智能知識管理</h3>
+                  <p className="text-gray-700 mb-4">自動整理、分類和摘要您的網頁內容</p>
+                  <div className="grid grid-cols-2 gap-4 w-full max-w-xs">
+                    <div className="bg-white p-3 rounded-lg shadow-sm border border-blue-100">
+                      <div className="text-blue-600 font-semibold">擷取</div>
+                    </div>
+                    <div className="bg-white p-3 rounded-lg shadow-sm border border-blue-100">
+                      <div className="text-blue-600 font-semibold">分類</div>
+                    </div>
+                    <div className="bg-white p-3 rounded-lg shadow-sm border border-blue-100">
+                      <div className="text-blue-600 font-semibold">摘要</div>
+                    </div>
+                    <div className="bg-white p-3 rounded-lg shadow-sm border border-blue-100">
+                      <div className="text-blue-600 font-semibold">學習</div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
