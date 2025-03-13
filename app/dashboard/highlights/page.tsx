@@ -73,6 +73,84 @@ export default function HighlightsPage() {
     }
   };
 
+  // 渲染分頁按鈕
+  const renderPaginationButtons = () => {
+    const { page, totalPages } = pagination;
+    const buttons = [];
+    
+    // 上一頁按鈕
+    buttons.push(
+      <button 
+        key="prev" 
+        onClick={() => handlePageChange(page - 1)} 
+        disabled={page === 1}
+        className={`px-3 py-1 rounded-md ${page === 1 ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
+      >
+        上一頁
+      </button>
+    );
+    
+    // 頁碼按鈕
+    const startPage = Math.max(1, page - 2);
+    const endPage = Math.min(totalPages, page + 2);
+    
+    if (startPage > 1) {
+      buttons.push(
+        <button 
+          key="1" 
+          onClick={() => handlePageChange(1)} 
+          className="px-3 py-1 mx-1 rounded-md bg-gray-200 hover:bg-gray-300 text-gray-700"
+        >
+          1
+        </button>
+      );
+      if (startPage > 2) {
+        buttons.push(<span key="ellipsis1" className="px-2">...</span>);
+      }
+    }
+    
+    for (let i = startPage; i <= endPage; i++) {
+      buttons.push(
+        <button 
+          key={i} 
+          onClick={() => handlePageChange(i)} 
+          className={`px-3 py-1 mx-1 rounded-md ${i === page ? 'bg-blue-500 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
+        >
+          {i}
+        </button>
+      );
+    }
+    
+    if (endPage < totalPages) {
+      if (endPage < totalPages - 1) {
+        buttons.push(<span key="ellipsis2" className="px-2">...</span>);
+      }
+      buttons.push(
+        <button 
+          key={totalPages} 
+          onClick={() => handlePageChange(totalPages)} 
+          className="px-3 py-1 mx-1 rounded-md bg-gray-200 hover:bg-gray-300 text-gray-700"
+        >
+          {totalPages}
+        </button>
+      );
+    }
+    
+    // 下一頁按鈕
+    buttons.push(
+      <button 
+        key="next" 
+        onClick={() => handlePageChange(page + 1)} 
+        disabled={page === totalPages}
+        className={`px-3 py-1 rounded-md ${page === totalPages ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
+      >
+        下一頁
+      </button>
+    );
+    
+    return buttons;
+  };
+
   // 根據分類獲取背景顏色
   const getCategoryColor = (category: string) => {
     const colorMap: Record<string, string> = {
@@ -127,6 +205,15 @@ export default function HighlightsPage() {
         </div>
       ) : (
         <div className="space-y-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
+            <h2 className="text-lg sm:text-xl font-semibold mb-2 sm:mb-0">精華筆記列表</h2>
+            {pagination.total > 0 && (
+              <p className="text-gray-500 text-xs sm:text-sm">
+                共 {pagination.total} 筆記錄，第 {pagination.page} 頁，共 {pagination.totalPages} 頁
+              </p>
+            )}
+          </div>
+          
           {highlights.map((highlight) => {
             console.log("渲染精華筆記:", highlight);
             const categoryColor = getCategoryColor(highlight.category);
@@ -166,26 +253,8 @@ export default function HighlightsPage() {
           })}
           
           {pagination.totalPages > 1 && (
-            <div className="flex justify-center mt-8">
-              <nav className="flex items-center space-x-2">
-                <button
-                  onClick={() => handlePageChange(pagination.page - 1)}
-                  disabled={pagination.page === 1}
-                  className="px-3 py-1 rounded border disabled:opacity-50 text-gray-900"
-                >
-                  上一頁
-                </button>
-                <span className="px-3 py-1 text-gray-900">
-                  {pagination.page} / {pagination.totalPages}
-                </span>
-                <button
-                  onClick={() => handlePageChange(pagination.page + 1)}
-                  disabled={pagination.page === pagination.totalPages}
-                  className="px-3 py-1 rounded border disabled:opacity-50 text-gray-900"
-                >
-                  下一頁
-                </button>
-              </nav>
+            <div className="flex flex-wrap justify-center mt-6 sm:mt-8 gap-1 sm:gap-2">
+              {renderPaginationButtons()}
             </div>
           )}
         </div>
