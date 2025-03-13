@@ -3,7 +3,6 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import Sidebar from "../components/Sidebar";
 
 interface Content {
   id: string;
@@ -24,12 +23,7 @@ interface Pagination {
 
 export default function CapturePage() {
   const router = useRouter();
-  const { data: session, status } = useSession({
-    required: true,
-    onUnauthenticated() {
-      router.push('/auth/signin');
-    },
-  });
+  const { data: session } = useSession();
 
   const [contents, setContents] = useState<Content[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -122,14 +116,6 @@ export default function CapturePage() {
     }
   };
 
-  if (status === "loading") {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-      </div>
-    );
-  }
-
   // 生成頁碼按鈕
   const renderPaginationButtons = () => {
     const buttons = [];
@@ -209,117 +195,107 @@ export default function CapturePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="flex h-full">
-        {/* 側邊欄 */}
-        <Sidebar className="w-64 min-h-screen sticky top-0" />
-        
-        {/* 主要內容區域 */}
-        <div className="flex-1 py-6 px-4">
-          <div className="max-w-7xl mx-auto">
-            <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
-              <h1 className="text-2xl font-bold mb-4">已擷取內容</h1>
-              <p className="text-gray-600 mb-4">
-                您可以查看所有已經擷取的網頁內容，以及 AI 產生的摘要
-              </p>
-            </div>
+    <div className="max-w-7xl mx-auto">
+      <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
+        <h1 className="text-2xl font-bold mb-4">已擷取內容</h1>
+        <p className="text-gray-600 mb-4">
+          您可以查看所有已經擷取的網頁內容，以及 AI 產生的摘要
+        </p>
+      </div>
 
-            <div className="bg-white shadow-lg rounded-lg p-6">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-semibold">已擷取內容</h2>
-                {pagination.total > 0 && (
-                  <p className="text-gray-500 text-sm">
-                    共 {pagination.total} 筆記錄，第 {pagination.page} 頁，共 {pagination.totalPages} 頁
-                  </p>
-                )}
-              </div>
-              
-              {isLoading ? (
-                <div className="flex justify-center items-center h-32">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-                </div>
-              ) : error ? (
-                <div className="bg-red-50 p-4 rounded-md">
-                  <p className="text-red-800">{error}</p>
-                </div>
-              ) : contents.length === 0 ? (
-                <div className="text-center py-8">
-                  <p className="text-gray-500">尚未擷取任何內容</p>
-                  <p className="text-sm text-gray-400 mt-2">
-                    使用 Chrome 擴充功能來擷取網頁內容
-                  </p>
-                </div>
-              ) : (
-                <>
-                  <div className="space-y-6">
-                    {contents.map((content) => {
-                      console.log('渲染內容:', content.id, '摘要:', content.summary, '分類:', content.category);
-                      return (
-                      <div key={content.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                        <div className="flex justify-between items-start">
-                          <h3 className="text-lg font-medium mb-2">
-                            <a href={content.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-                              {content.title}
-                            </a>
-                          </h3>
-                          <button
-                            onClick={() => handleUpdateSummary(content.id)}
-                            disabled={updatingContentId === content.id}
-                            className={`px-3 py-1 text-xs rounded-md ${
-                              updatingContentId === content.id
-                                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                : 'bg-blue-500 text-white hover:bg-blue-600'
-                            }`}
-                          >
-                            {updatingContentId === content.id ? '更新中...' : '更新摘要'}
-                          </button>
-                        </div>
-                        <div className="flex flex-wrap gap-2 mb-2">
-                          {content.category && (
-                            <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
-                              {content.category}
-                            </span>
-                          )}
-                          <span className="text-gray-600 text-sm">
-                            {new Date(content.createdAt).toLocaleString()}
-                          </span>
-                        </div>
-                        {content.summary ? (
-                          <>
-                            <p className="text-gray-700 mb-2 font-medium">摘要：</p>
-                            <p className="text-gray-700 mb-4">{content.summary}</p>
-                          </>
-                        ) : (
-                          <p className="text-gray-500 italic mb-4">尚未生成摘要</p>
-                        )}
-                        
-                        <div className="mt-6">
-                          <p className="text-gray-700 mb-2 font-medium">擷取內容：</p>
-                          <p className="text-gray-700 line-clamp-3">{content.content}</p>
-                        </div>
-                        
-                        {/* 調試信息 */}
-                        <details className="mt-4 text-xs text-gray-500">
-                          <summary>調試信息</summary>
-                          <pre className="mt-2 p-2 bg-gray-100 rounded overflow-auto">
-                            {JSON.stringify({id: content.id, summary: content.summary, category: content.category}, null, 2)}
-                          </pre>
-                        </details>
-                      </div>
-                    )})}
+      <div className="bg-white shadow-lg rounded-lg p-6">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold">已擷取內容</h2>
+          {pagination.total > 0 && (
+            <p className="text-gray-500 text-sm">
+              共 {pagination.total} 筆記錄，第 {pagination.page} 頁，共 {pagination.totalPages} 頁
+            </p>
+          )}
+        </div>
+        
+        {isLoading ? (
+          <div className="flex justify-center items-center h-32">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+          </div>
+        ) : error ? (
+          <div className="bg-red-50 p-4 rounded-md">
+            <p className="text-red-800">{error}</p>
+          </div>
+        ) : contents.length === 0 ? (
+          <div className="text-center py-8">
+            <p className="text-gray-500">尚未擷取任何內容</p>
+            <p className="text-sm text-gray-400 mt-2">
+              使用 Chrome 擴充功能來擷取網頁內容
+            </p>
+          </div>
+        ) : (
+          <>
+            <div className="space-y-6">
+              {contents.map((content) => {
+                console.log('渲染內容:', content.id, '摘要:', content.summary, '分類:', content.category);
+                return (
+                <div key={content.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                  <div className="flex justify-between items-start">
+                    <h3 className="text-lg font-medium mb-2">
+                      <a href={content.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                        {content.title}
+                      </a>
+                    </h3>
+                    <button
+                      onClick={() => handleUpdateSummary(content.id)}
+                      disabled={updatingContentId === content.id}
+                      className={`px-3 py-1 text-xs rounded-md ${
+                        updatingContentId === content.id
+                          ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                          : 'bg-blue-500 text-white hover:bg-blue-600'
+                      }`}
+                    >
+                      {updatingContentId === content.id ? '更新中...' : '更新摘要'}
+                    </button>
+                  </div>
+                  <div className="flex flex-wrap gap-2 mb-2">
+                    {content.category && (
+                      <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
+                        {content.category}
+                      </span>
+                    )}
+                    <span className="text-gray-600 text-sm">
+                      {new Date(content.createdAt).toLocaleString()}
+                    </span>
+                  </div>
+                  {content.summary ? (
+                    <>
+                      <p className="text-gray-700 mb-2 font-medium">摘要：</p>
+                      <p className="text-gray-700 mb-4">{content.summary}</p>
+                    </>
+                  ) : (
+                    <p className="text-gray-500 italic mb-4">尚未生成摘要</p>
+                  )}
+                  
+                  <div className="mt-6">
+                    <p className="text-gray-700 mb-2 font-medium">擷取內容：</p>
+                    <p className="text-gray-700 line-clamp-3">{content.content}</p>
                   </div>
                   
-                  {/* 分頁控制 */}
-                  {pagination.totalPages > 1 && (
-                    <div className="flex justify-center mt-8 space-x-2">
-                      {renderPaginationButtons()}
-                    </div>
-                  )}
-                </>
-              )}
+                  {/* 調試信息 */}
+                  <details className="mt-4 text-xs text-gray-500">
+                    <summary>調試信息</summary>
+                    <pre className="mt-2 p-2 bg-gray-100 rounded overflow-auto">
+                      {JSON.stringify({id: content.id, summary: content.summary, category: content.category}, null, 2)}
+                    </pre>
+                  </details>
+                </div>
+              )})}
             </div>
-          </div>
-        </div>
+            
+            {/* 分頁控制 */}
+            {pagination.totalPages > 1 && (
+              <div className="flex justify-center mt-8 space-x-2">
+                {renderPaginationButtons()}
+              </div>
+            )}
+          </>
+        )}
       </div>
     </div>
   );
