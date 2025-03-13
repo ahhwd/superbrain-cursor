@@ -53,8 +53,8 @@ export default function DashboardLayout({
       )}
 
       <div className="flex-1">
-        {/* 移動版頂部導航欄 */}
-        <div className="md:hidden bg-white p-4 shadow-sm flex items-center">
+        {/* 移動版頂部導航欄 - 修改為固定在頂部 */}
+        <div className="md:hidden bg-white p-4 shadow-sm flex items-center fixed top-0 left-0 right-0 z-40">
           <button 
             onClick={toggleSidebar}
             className="text-gray-500 hover:text-gray-700 focus:outline-none"
@@ -66,8 +66,11 @@ export default function DashboardLayout({
           <span className="ml-4 text-xl font-bold text-blue-600">SuperBrain</span>
         </div>
 
-        <div className="p-4 sm:p-6 md:p-8">
-          {children}
+        {/* 為移動版添加頂部間距，避免內容被固定導航欄遮擋 */}
+        <div className="md:p-0 pt-16">
+          <div className="p-4 sm:p-6 md:p-8">
+            {children}
+          </div>
         </div>
       </div>
     </div>
