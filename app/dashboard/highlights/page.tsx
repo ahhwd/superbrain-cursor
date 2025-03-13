@@ -73,6 +73,24 @@ export default function HighlightsPage() {
     }
   };
 
+  // 根據分類獲取背景顏色
+  const getCategoryColor = (category: string) => {
+    const colorMap: Record<string, string> = {
+      '經濟學': '#3b82f6', // 藍色
+      '科技': '#10b981', // 綠色
+      '健康': '#ef4444', // 紅色
+      '教育': '#f59e0b', // 橙色
+      '藝術': '#8b5cf6', // 紫色
+      '政治': '#6b7280', // 灰色
+      '環境': '#059669', // 深綠色
+      '心理學': '#ec4899', // 粉色
+      '歷史': '#b45309', // 棕色
+      '其他': '#6b7280', // 灰色
+    };
+    
+    return colorMap[category] || '#6b7280'; // 默認灰色
+  };
+
   if (status === "loading") {
     return (
       <div className="min-h-screen">
@@ -89,21 +107,6 @@ export default function HighlightsPage() {
     <main className="p-8">
       <h1 className="text-2xl font-bold mb-6 text-gray-900">精華筆記</h1>
       <p className="text-gray-600 mb-6">AI 將您儲存的擷取內容自動整理成不同主題的精華筆記</p>
-      
-      {/* 測試元素 */}
-      <div className="mb-6">
-        <div style={{
-          backgroundColor: '#3b82f6',
-          color: 'white',
-          fontWeight: 'bold',
-          padding: '4px 12px',
-          borderRadius: '6px',
-          display: 'inline-block',
-          marginBottom: '16px'
-        }}>
-          測試分類標籤
-        </div>
-      </div>
       
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
@@ -126,40 +129,26 @@ export default function HighlightsPage() {
         <div className="space-y-6">
           {highlights.map((highlight) => {
             console.log("渲染精華筆記:", highlight);
+            const categoryColor = getCategoryColor(highlight.category);
+            
             return (
             <div key={highlight.id} className="bg-white p-6 rounded-lg shadow">
               <div className="flex justify-between items-start mb-4">
                 <h2 className="text-xl font-semibold">
-                  {highlight.title ? (
-                    <div className="inline-flex items-center">
-                      <div style={{
-                        backgroundColor: '#3b82f6',
-                        color: 'white',
-                        fontWeight: 'bold',
-                        padding: '4px 12px',
-                        borderRadius: '6px',
-                        display: 'inline-block',
-                        marginRight: '8px'
-                      }}>
-                        經濟學
-                      </div>
-                      <span>{highlight.title}</span>
+                  <div className="inline-flex items-center">
+                    <div style={{
+                      backgroundColor: categoryColor,
+                      color: 'white',
+                      fontWeight: 'bold',
+                      padding: '4px 12px',
+                      borderRadius: '6px',
+                      display: 'inline-block',
+                      marginRight: '8px'
+                    }}>
+                      {highlight.category}
                     </div>
-                  ) : (
-                    <div className="inline-flex items-center">
-                      <div style={{
-                        backgroundColor: '#3b82f6',
-                        color: 'white',
-                        fontWeight: 'bold',
-                        padding: '4px 12px',
-                        borderRadius: '6px',
-                        display: 'inline-block'
-                      }}>
-                        經濟學
-                      </div>
-                      <span className="text-gray-900 ml-2">精華筆記</span>
-                    </div>
-                  )}
+                    {highlight.title && <span>{highlight.title.replace(`${highlight.category} 精華筆記`, '精華筆記')}</span>}
+                  </div>
                 </h2>
               </div>
               <div className="prose max-w-none text-gray-800">
