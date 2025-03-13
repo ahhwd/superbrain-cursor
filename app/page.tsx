@@ -46,9 +46,24 @@ export default function Home() {
             <div className="md:w-1/2">
               <div className="relative h-80 sm:h-96 w-full rounded-lg shadow-xl overflow-hidden">
                 <div className="absolute inset-0 bg-blue-100 flex items-center justify-center">
-                  <div className="text-center p-6 bg-white rounded-lg shadow-lg m-4">
-                    <h3 className="text-xl font-semibold text-blue-600 mb-2">精華筆記示例</h3>
-                    <p className="text-gray-700">AI 自動整理的精華內容，讓您快速掌握重點</p>
+                  <div className="w-full max-w-md bg-white rounded-lg shadow-lg m-4 overflow-hidden">
+                    <div className="bg-blue-600 px-4 py-2">
+                      <h3 className="text-lg font-semibold text-white">經濟學精華筆記</h3>
+                    </div>
+                    <div className="p-4">
+                      <div className="mb-3 pb-2 border-b border-gray-200">
+                        <p className="text-sm text-gray-500 mb-1">2025年3月更新</p>
+                      </div>
+                      <p className="text-gray-700 mb-2 text-sm">關稅是政府對進口或出口商品徵收的稅款，其高低影響國際貿易、產業發展和物價。</p>
+                      <p className="text-gray-700 mb-2 text-sm">主要影響包括：</p>
+                      <ul className="list-disc pl-5 text-sm text-gray-700 mb-2">
+                        <li>對國際貿易的影響</li>
+                        <li>對產業發展的影響</li>
+                        <li>對物價的影響</li>
+                        <li>對國家財政收入的影響</li>
+                      </ul>
+                      <p className="text-gray-700 text-sm">2025年3月，美國對加拿大、墨西哥及中國進口商品徵收關稅，引發了廣泛討論...</p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -211,6 +226,6 @@ export default function Home() {
           </div>
         </div>
       </footer>
-    </div>
+      </div>
   );
 } 
