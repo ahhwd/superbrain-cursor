@@ -14,7 +14,7 @@ export default function Sidebar({ className = '', onNavigate }: SidebarProps) {
     { name: '儀表板', href: '/dashboard', icon: 'home' },
     { name: '精華筆記', href: '/dashboard/highlights', icon: 'star' },
     { name: '擷取內容', href: '/dashboard/capture', icon: 'capture' },
-    { name: '帳號管理', href: '/dashboard/account', icon: 'user' },
+    { name: '帳號設定', href: '/dashboard/account', icon: 'user' },
   ];
 
   const handleSignOut = () => {
