@@ -106,7 +106,7 @@ export default function HighlightsPage() {
   return (
     <main className="p-8">
       <h1 className="text-2xl font-bold mb-6 text-gray-900">精華筆記</h1>
-      <p className="text-gray-600 mb-6">AI 將您儲存的擷取內容自動整理成不同主題的精華筆記</p>
+      <p className="text-gray-600 mb-6">AI 將您從網頁儲存的擷取內容自動整理成不同主題的精華筆記</p>
       
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">

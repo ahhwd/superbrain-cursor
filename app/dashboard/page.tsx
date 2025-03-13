@@ -7,8 +7,8 @@ export default function DashboardPage() {
   const { data: session } = useSession();
 
   const menuItems = [
-    { name: '精華筆記', href: '/dashboard/highlights', icon: 'star', description: '查看您標記為精華的筆記內容' },
-    { name: '擷取內容', href: '/dashboard/capture', icon: 'capture', description: '查看所有已擷取的網頁內容' },
+    { name: '精華筆記', href: '/dashboard/highlights', icon: 'star', description: '查看 AI 為您整理的精華筆記' },
+    { name: '擷取內容', href: '/dashboard/capture', icon: 'capture', description: '查看您已擷取的網頁內容' },
   ];
 
   return (
@@ -16,7 +16,7 @@ export default function DashboardPage() {
       <div className="bg-white shadow-lg rounded-lg p-4 sm:p-6 mb-4 sm:mb-6">
         <h1 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-4 text-gray-900">歡迎使用 SuperBrain</h1>
         <p className="text-gray-600 text-sm sm:text-base">
-          您的個人知識管理助手，幫助您整理和管理網頁內容。
+          您的 AI 知識助手，幫助您將資訊整理變成知識。
         </p>
       </div>
 

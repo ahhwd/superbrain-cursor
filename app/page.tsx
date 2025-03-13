@@ -27,10 +27,10 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="text-center">
             <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-              將您的知識整理成<span className="text-blue-600">精華筆記</span>
+              <span className="text-blue-600">AI 幫你把資訊變成知識</span>
             </h1>
             <p className="text-lg text-gray-600 mb-6 max-w-2xl mx-auto">
-              SuperBrain 使用 AI 自動將您擷取的網頁內容整理成不同主題的精華筆記，讓您輕鬆掌握重要知識。
+              SuperBrain AI 自動將您擷取的網頁內容整理成不同主題的精華筆記，幫您輕鬆掌握重要知識。
             </p>
             
             {/* 示意圖 - 使用內聯 SVG */}
