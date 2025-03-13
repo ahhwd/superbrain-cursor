@@ -210,7 +210,7 @@ export default function CapturePage() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <div className="flex">
+      <div className="flex h-full">
         {/* 側邊欄 */}
         <Sidebar className="w-64 min-h-screen sticky top-0" />
         
