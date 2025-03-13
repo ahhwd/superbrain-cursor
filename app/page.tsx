@@ -32,6 +32,49 @@ export default function Home() {
             <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
               SuperBrain 使用 AI 自動將您擷取的網頁內容整理成不同主題的精華筆記，讓您輕鬆掌握重要知識。
             </p>
+            
+            {/* 示意圖 - 使用內聯 SVG */}
+            <div className="max-w-md mx-auto mb-8 p-4">
+              <svg viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg" className="w-full">
+                {/* 中央大腦圖示 */}
+                <circle cx="200" cy="110" r="40" fill="#dbeafe" stroke="#3b82f6" strokeWidth="2" />
+                <path d="M200 90 L200 130 M185 105 L215 115 M185 115 L215 105" stroke="#3b82f6" strokeWidth="2" />
+                
+                {/* 連接線和節點 */}
+                <circle cx="100" cy="70" r="6" fill="#3b82f6" />
+                <line x1="110" y1="75" x2="175" y2="95" stroke="#3b82f6" strokeWidth="1.5" strokeDasharray="3,3" />
+                
+                <circle cx="300" cy="70" r="6" fill="#3b82f6" />
+                <line x1="290" y1="75" x2="225" y2="95" stroke="#3b82f6" strokeWidth="1.5" strokeDasharray="3,3" />
+                
+                <circle cx="100" cy="150" r="6" fill="#3b82f6" />
+                <line x1="110" y1="145" x2="175" y2="125" stroke="#3b82f6" strokeWidth="1.5" strokeDasharray="3,3" />
+                
+                <circle cx="300" cy="150" r="6" fill="#3b82f6" />
+                <line x1="290" y1="145" x2="225" y2="125" stroke="#3b82f6" strokeWidth="1.5" strokeDasharray="3,3" />
+                
+                {/* 文本框 */}
+                <rect x="60" y="50" width="80" height="40" rx="4" fill="white" stroke="#3b82f6" strokeWidth="1" />
+                <line x1="70" y1="65" x2="130" y2="65" stroke="#3b82f6" strokeWidth="1" />
+                <line x1="70" y1="75" x2="120" y2="75" stroke="#3b82f6" strokeWidth="1" />
+                
+                <rect x="260" y="50" width="80" height="40" rx="4" fill="white" stroke="#3b82f6" strokeWidth="1" />
+                <line x1="270" y1="65" x2="330" y2="65" stroke="#3b82f6" strokeWidth="1" />
+                <line x1="270" y1="75" x2="320" y2="75" stroke="#3b82f6" strokeWidth="1" />
+                
+                <rect x="60" y="130" width="80" height="40" rx="4" fill="white" stroke="#3b82f6" strokeWidth="1" />
+                <line x1="70" y1="145" x2="130" y2="145" stroke="#3b82f6" strokeWidth="1" />
+                <line x1="70" y1="155" x2="120" y2="155" stroke="#3b82f6" strokeWidth="1" />
+                
+                <rect x="260" y="130" width="80" height="40" rx="4" fill="white" stroke="#3b82f6" strokeWidth="1" />
+                <line x1="270" y1="145" x2="330" y2="145" stroke="#3b82f6" strokeWidth="1" />
+                <line x1="270" y1="155" x2="320" y2="155" stroke="#3b82f6" strokeWidth="1" />
+                
+                {/* 標題 */}
+                <text x="200" y="30" textAnchor="middle" fill="#3b82f6" fontWeight="bold" fontSize="14">知識整理示意圖</text>
+              </svg>
+            </div>
+            
             <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
               <Link href="/auth/register" className="px-6 py-3 rounded-lg bg-blue-600 text-white text-center font-medium hover:bg-blue-700 transition-colors">
                 免費註冊
