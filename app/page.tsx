@@ -46,12 +46,52 @@ export default function Home() {
             <div className="md:w-1/2 px-4 md:px-0">
               <div className="relative h-80 sm:h-96 w-full rounded-lg shadow-xl overflow-hidden border border-gray-200">
                 <div className="absolute inset-0 bg-blue-50 flex items-center justify-center p-4">
-                  <img 
-                    src="/images/superbrain-diagram.png" 
-                    alt="SuperBrain 知識整理示意圖" 
-                    className="max-w-full max-h-full object-contain"
-                    style={{ width: 'auto', height: 'auto' }}
-                  />
+                  {/* 使用內聯 SVG 替代外部 PNG 圖片 */}
+                  <svg 
+                    viewBox="0 0 800 500" 
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-full h-full max-w-md"
+                  >
+                    <rect x="50" y="50" width="700" height="400" rx="20" fill="#e6f0ff" stroke="#3b82f6" strokeWidth="2" />
+                    
+                    {/* 中央大腦圖示 */}
+                    <circle cx="400" cy="250" r="80" fill="#dbeafe" stroke="#3b82f6" strokeWidth="2" />
+                    <path d="M400 190 L400 310 M370 220 L430 280 M370 280 L430 220" stroke="#3b82f6" strokeWidth="3" />
+                    
+                    {/* 連接線和節點 */}
+                    <circle cx="200" cy="150" r="10" fill="#3b82f6" />
+                    <line x1="220" y1="160" x2="350" y2="210" stroke="#3b82f6" strokeWidth="2" strokeDasharray="5,5" />
+                    
+                    <circle cx="600" cy="150" r="10" fill="#3b82f6" />
+                    <line x1="580" y1="160" x2="450" y2="210" stroke="#3b82f6" strokeWidth="2" strokeDasharray="5,5" />
+                    
+                    <circle cx="200" cy="350" r="10" fill="#3b82f6" />
+                    <line x1="220" y1="340" x2="350" y2="290" stroke="#3b82f6" strokeWidth="2" strokeDasharray="5,5" />
+                    
+                    <circle cx="600" cy="350" r="10" fill="#3b82f6" />
+                    <line x1="580" y1="340" x2="450" y2="290" stroke="#3b82f6" strokeWidth="2" strokeDasharray="5,5" />
+                    
+                    {/* 文本框 */}
+                    <rect x="120" y="120" width="160" height="60" rx="5" fill="white" stroke="#3b82f6" strokeWidth="1" />
+                    <line x1="140" y1="140" x2="260" y2="140" stroke="#3b82f6" strokeWidth="1" />
+                    <line x1="140" y1="160" x2="240" y2="160" stroke="#3b82f6" strokeWidth="1" />
+                    
+                    <rect x="520" y="120" width="160" height="60" rx="5" fill="white" stroke="#3b82f6" strokeWidth="1" />
+                    <line x1="540" y1="140" x2="660" y2="140" stroke="#3b82f6" strokeWidth="1" />
+                    <line x1="540" y1="160" x2="640" y2="160" stroke="#3b82f6" strokeWidth="1" />
+                    
+                    <rect x="120" y="320" width="160" height="60" rx="5" fill="white" stroke="#3b82f6" strokeWidth="1" />
+                    <line x1="140" y1="340" x2="260" y2="340" stroke="#3b82f6" strokeWidth="1" />
+                    <line x1="140" y1="360" x2="240" y2="360" stroke="#3b82f6" strokeWidth="1" />
+                    
+                    <rect x="520" y="320" width="160" height="60" rx="5" fill="white" stroke="#3b82f6" strokeWidth="1" />
+                    <line x1="540" y1="340" x2="660" y2="340" stroke="#3b82f6" strokeWidth="1" />
+                    <line x1="540" y1="360" x2="640" y2="360" stroke="#3b82f6" strokeWidth="1" />
+                    
+                    {/* 標題 */}
+                    <text x="400" y="80" textAnchor="middle" fill="#3b82f6" fontWeight="bold" fontSize="24">SuperBrain</text>
+                    <text x="400" y="110" textAnchor="middle" fill="#3b82f6" fontSize="16">將您的知識整理成精華筆記</text>
+                  </svg>
                 </div>
               </div>
             </div>
