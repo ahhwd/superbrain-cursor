@@ -73,7 +73,8 @@ export default function MobileNavbar({ title = 'SuperBrain' }: MobileNavbarProps
       >
         <div className="flex flex-col h-full">
           <div className="p-4 border-b border-gray-200">
-            <h2 className="text-xl font-bold">SuperBrain</h2>
+            <h2 className="text-xl font-bold text-blue-700">SuperBrain</h2>
+            <p className="text-sm text-gray-600 mt-1">你的個人知識管理助手</p>
           </div>
           
           <div className="flex-grow overflow-y-auto p-4 space-y-2">
