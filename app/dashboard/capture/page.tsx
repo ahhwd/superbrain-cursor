@@ -40,7 +40,6 @@ export default function CapturePage() {
     limit: 20,
     totalPages: 0
   });
-  const [updatingContentId, setUpdatingContentId] = useState<string | null>(null);
 
   const fetchContents = async (page = 1) => {
     try {
@@ -87,53 +86,10 @@ export default function CapturePage() {
     }
   };
 
-  const handleUpdateSummary = async (contentId: string) => {
-    try {
-      setUpdatingContentId(contentId);
-      const response = await fetch('/api/content/update-summary', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ contentId }),
-      });
-      
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.error || '更新摘要失敗');
-      }
-      
-      // 更新本地狀態
-      setContents(prevContents => 
-        prevContents.map(content => 
-          content.id === contentId 
-            ? { ...content, summary: data.summary, category: data.category } 
-            : content
-        )
-      );
-      
-      alert('摘要和分類已更新');
-    } catch (err) {
-      console.error('更新摘要時發生錯誤:', err);
-      alert(`更新摘要失敗: ${err instanceof Error ? err.message : '未知錯誤'}`);
-    } finally {
-      setUpdatingContentId(null);
-    }
-  };
-
-  if (status === "loading") {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-      </div>
-    );
-  }
-
-  // 生成頁碼按鈕
+  // 渲染分頁按鈕
   const renderPaginationButtons = () => {
-    const buttons = [];
     const { page, totalPages } = pagination;
+    const buttons = [];
     
     // 上一頁按鈕
     buttons.push(
@@ -249,22 +205,11 @@ export default function CapturePage() {
                 return (
                 <div key={content.id} className="border rounded-lg p-3 sm:p-4 hover:shadow-md transition-shadow">
                   <div className="flex justify-between items-start">
-                    <h3 className="text-base sm:text-lg font-medium mb-2 break-words pr-2 flex-1">
+                    <h3 className="text-base sm:text-lg font-medium mb-2 break-words pr-2">
                       <a href={content.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
                         {content.title}
                       </a>
                     </h3>
-                    <button
-                      onClick={() => handleUpdateSummary(content.id)}
-                      disabled={updatingContentId === content.id}
-                      className={`px-3 py-1 text-xs rounded-md whitespace-nowrap flex-shrink-0 ${
-                        updatingContentId === content.id
-                          ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                          : 'bg-blue-500 text-white hover:bg-blue-600'
-                      }`}
-                    >
-                      {updatingContentId === content.id ? '更新中...' : '更新摘要'}
-                    </button>
                   </div>
                   <div className="flex flex-wrap gap-2 mb-2">
                     {content.category && (
@@ -289,14 +234,6 @@ export default function CapturePage() {
                     <p className="text-gray-700 mb-1 sm:mb-2 font-medium">擷取內容：</p>
                     <p className="text-gray-700 text-sm sm:text-base line-clamp-3">{content.content}</p>
                   </div>
-                  
-                  {/* 調試信息 */}
-                  <details className="mt-3 sm:mt-4 text-xs text-gray-500">
-                    <summary>調試信息</summary>
-                    <pre className="mt-2 p-2 bg-gray-100 rounded overflow-x-auto text-xs">
-                      {JSON.stringify({id: content.id, summary: content.summary, category: content.category}, null, 2)}
-                    </pre>
-                  </details>
                 </div>
               )})}
             </div>
