@@ -22,8 +22,8 @@ export default function Sidebar({ className = '' }: SidebarProps) {
 
   return (
     <div className={`bg-white shadow-lg rounded-lg p-4 ${className}`}>
-      <div className="flex flex-col h-full">
-        <div className="flex-grow space-y-2">
+      <div className="flex flex-col h-full justify-between">
+        <div className="space-y-2">
           {menuItems.map((item) => {
             const isActive = pathname === item.href;
             return (
