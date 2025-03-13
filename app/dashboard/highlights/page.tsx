@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
+import { useTranslation } from "@/lib/useTranslation";
 
 interface Highlight {
   id: string;
@@ -30,6 +31,7 @@ interface Pagination {
 export default function HighlightsPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const { t } = useTranslation();
   const [highlights, setHighlights] = useState<Highlight[]>([]);
   const [pagination, setPagination] = useState<Pagination>({
     total: 0,
@@ -61,7 +63,7 @@ export default function HighlightsPage() {
       const response = await fetch(`/api/highlights?page=${pagination.page}&limit=${pagination.limit}`);
       
       if (!response.ok) {
-        throw new Error("獲取精華筆記失敗");
+        throw new Error(t('highlights_error'));
       }
       
       const data = await response.json();
@@ -70,7 +72,7 @@ export default function HighlightsPage() {
       setPagination(data.pagination);
     } catch (err) {
       console.error("獲取精華筆記時發生錯誤:", err);
-      setError("獲取精華筆記時發生錯誤");
+      setError(t('highlights_error'));
     } finally {
       setLoading(false);
     }
@@ -90,7 +92,7 @@ export default function HighlightsPage() {
       const response = await fetch(`/api/highlights/source-url?category=${encodeURIComponent(category)}`);
       
       if (!response.ok) {
-        throw new Error("獲取來源 URL 失敗");
+        throw new Error(t('highlights_error'));
       }
       
       const data = await response.json();
@@ -98,7 +100,7 @@ export default function HighlightsPage() {
       setShowSourceUrls(prev => ({ ...prev, [category]: true }));
     } catch (err) {
       console.error("獲取來源 URL 時發生錯誤:", err);
-      alert("獲取來源 URL 時發生錯誤");
+      alert(t('highlights_error'));
     } finally {
       setLoadingSourceUrls(prev => ({ ...prev, [category]: false }));
     }
@@ -123,7 +125,7 @@ export default function HighlightsPage() {
         disabled={page === 1}
         className={`px-3 py-1 rounded-md ${page === 1 ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
       >
-        上一頁
+        {t('pagination_prev')}
       </button>
     );
     
@@ -181,7 +183,7 @@ export default function HighlightsPage() {
         disabled={page === totalPages}
         className={`px-3 py-1 rounded-md ${page === totalPages ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
       >
-        下一頁
+        {t('pagination_next')}
       </button>
     );
     
@@ -211,7 +213,7 @@ export default function HighlightsPage() {
       <div className="min-h-screen">
         <main className="p-8">
           <div className="flex justify-center items-center h-full">
-            <p>載入中...</p>
+            <p>{t('loading')}</p>
           </div>
         </main>
       </div>
@@ -220,8 +222,8 @@ export default function HighlightsPage() {
 
   return (
     <main className="p-8">
-      <h1 className="text-2xl font-bold mb-6 text-gray-900">精華筆記</h1>
-      <p className="text-gray-600 mb-6">AI 將您從網頁儲存的擷取內容自動整理成不同主題的精華筆記</p>
+      <h1 className="text-2xl font-bold mb-6 text-gray-900">{t('highlights_title')}</h1>
+      <p className="text-gray-600 mb-6">{t('highlights_description')}</p>
       
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
@@ -231,111 +233,100 @@ export default function HighlightsPage() {
       
       {loading ? (
         <div className="flex justify-center items-center h-64">
-          <p className="text-gray-900">載入中...</p>
+          <p className="text-gray-900">{t('highlights_loading')}</p>
         </div>
       ) : highlights.length === 0 ? (
         <div className="bg-gray-100 p-6 rounded-lg text-center">
-          <p className="text-gray-600">目前沒有精華筆記</p>
+          <p className="text-gray-600">{t('highlights_empty')}</p>
           <p className="text-gray-500 mt-2 text-sm">
-            當您擷取網頁內容後，系統會自動為您生成精華筆記
+            {t('highlights_empty_description')}
           </p>
         </div>
       ) : (
         <div className="space-y-6">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
-            <h2 className="text-lg sm:text-xl font-semibold mb-2 sm:mb-0">精華筆記列表</h2>
+            <h2 className="text-lg sm:text-xl font-semibold mb-2 sm:mb-0">{t('highlights_list_title')}</h2>
             {pagination.total > 0 && (
               <p className="text-gray-500 text-xs sm:text-sm">
-                共 {pagination.total} 筆記錄，第 {pagination.page} 頁，共 {pagination.totalPages} 頁
+                {t('pagination_page_info').replace('{total}', pagination.total.toString())
+                                         .replace('{page}', pagination.page.toString())
+                                         .replace('{totalPages}', pagination.totalPages.toString())}
               </p>
             )}
           </div>
           
-          {highlights.map((highlight) => {
-            console.log("渲染精華筆記:", highlight);
-            const categoryColor = getCategoryColor(highlight.category);
-            
-            return (
-            <div key={highlight.id} className="bg-white p-6 rounded-lg shadow">
-              <div className="flex justify-between items-start mb-4">
-                <h2 className="text-xl font-semibold">
-                  <div className="inline-flex items-center">
-                    <div style={{
-                      backgroundColor: categoryColor,
-                      color: 'white',
-                      fontWeight: 'bold',
-                      padding: '4px 12px',
-                      borderRadius: '6px',
-                      display: 'inline-block',
-                      marginRight: '8px'
-                    }}>
-                      {highlight.category}
-                    </div>
-                    {highlight.title && <span>{highlight.title.replace(`${highlight.category} 精華筆記`, '精華筆記')}</span>}
-                  </div>
-                </h2>
-              </div>
-              <div className="prose max-w-none text-gray-800">
-                {highlight.content.split('\n').map((paragraph, index) => (
-                  <p key={index} className="mb-2">
-                    {paragraph}
-                  </p>
-                ))}
-              </div>
-              <div className="mt-4 flex justify-between items-center">
-                <div className="text-sm text-gray-500">
-                  最後更新: {new Date(highlight.updatedAt).toLocaleString('zh-TW')}
+          {/* 精華筆記列表 */}
+          <div className="space-y-6">
+            {highlights.map((highlight) => (
+              <div key={highlight.id} className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+                <div className="flex flex-wrap gap-2 mb-4">
+                  <span 
+                    className="px-3 py-1 rounded-full text-white text-sm font-medium"
+                    style={{ backgroundColor: getCategoryColor(highlight.category) }}
+                  >
+                    {highlight.category}
+                  </span>
                 </div>
-                <button 
-                  onClick={() => fetchSourceUrls(highlight.category)}
-                  className="flex items-center text-blue-600 hover:text-blue-800 text-sm"
-                  title="查看原始網頁"
-                >
-                  {loadingSourceUrls[highlight.category] ? (
-                    <span className="text-xs">載入中...</span>
-                  ) : (
-                    <>
-                      <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                      </svg>
-                      <span className="text-xs">原始網頁</span>
-                    </>
-                  )}
-                </button>
-              </div>
-              
-              {/* 來源 URL 列表 */}
-              {showSourceUrls[highlight.category] && sourceUrls[highlight.category] && (
-                <div className="mt-3 border-t pt-3">
-                  <h4 className="text-sm font-medium text-gray-700 mb-2">原始網頁來源:</h4>
-                  {sourceUrls[highlight.category].length > 0 ? (
-                    <ul className="text-xs space-y-1">
+                
+                {highlight.title && (
+                  <h3 className="text-xl font-semibold mb-3 text-gray-900">{highlight.title}</h3>
+                )}
+                
+                <div className="prose max-w-none text-gray-700">
+                  <p>{highlight.content}</p>
+                </div>
+                
+                <div className="mt-4 flex justify-between items-center">
+                  <button
+                    onClick={() => fetchSourceUrls(highlight.category)}
+                    className="text-blue-600 hover:text-blue-800 flex items-center text-sm"
+                  >
+                    {loadingSourceUrls[highlight.category] ? (
+                      <span className="mr-2">{t('loading')}</span>
+                    ) : (
+                      <>
+                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+                        </svg>
+                        {t('highlights_source_urls')}
+                      </>
+                    )}
+                  </button>
+                  <span className="text-gray-500 text-sm">
+                    {new Date(highlight.createdAt).toLocaleDateString()}
+                  </span>
+                </div>
+                
+                {/* 來源 URL 列表 */}
+                {showSourceUrls[highlight.category] && sourceUrls[highlight.category] && (
+                  <div className="mt-4 pt-4 border-t border-gray-200">
+                    <h4 className="text-sm font-medium text-gray-900 mb-2">{t('highlights_source_urls')}:</h4>
+                    <ul className="space-y-2">
                       {sourceUrls[highlight.category].map((source, index) => (
-                        <li key={index} className="flex items-start">
-                          <span className="text-gray-500 mr-2">{index + 1}.</span>
+                        <li key={index} className="text-sm">
                           <a 
                             href={source.url} 
                             target="_blank" 
-                            rel="noopener noreferrer" 
-                            className="text-blue-600 hover:underline break-all"
-                            title={source.title}
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:underline"
                           >
                             {source.title || source.url}
                           </a>
+                          <span className="text-gray-500 ml-2 text-xs">
+                            {new Date(source.createdAt).toLocaleDateString()}
+                          </span>
                         </li>
                       ))}
                     </ul>
-                  ) : (
-                    <p className="text-xs text-gray-500">沒有找到原始網頁來源</p>
-                  )}
-                </div>
-              )}
-            </div>
-            );
-          })}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
           
+          {/* 分頁控制 */}
           {pagination.totalPages > 1 && (
-            <div className="flex flex-wrap justify-center mt-6 sm:mt-8 gap-1 sm:gap-2">
+            <div className="flex flex-wrap justify-center mt-8 gap-2">
               {renderPaginationButtons()}
             </div>
           )}

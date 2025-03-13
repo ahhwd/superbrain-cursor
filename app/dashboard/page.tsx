@@ -2,21 +2,33 @@
 
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { useTranslation } from "@/lib/useTranslation";
 
 export default function DashboardPage() {
   const { data: session } = useSession();
+  const { t } = useTranslation();
 
   const menuItems = [
-    { name: '精華筆記', href: '/dashboard/highlights', icon: 'star', description: '查看 AI 為您整理的精華筆記' },
-    { name: '擷取內容', href: '/dashboard/capture', icon: 'capture', description: '查看您已擷取的網頁內容' },
+    { 
+      name: t('dashboard_highlights_card'), 
+      href: '/dashboard/highlights', 
+      icon: 'star', 
+      description: t('dashboard_highlights_description') 
+    },
+    { 
+      name: t('dashboard_capture_card'), 
+      href: '/dashboard/capture', 
+      icon: 'capture', 
+      description: t('dashboard_capture_description') 
+    },
   ];
 
   return (
     <div className="w-full">
       <div className="bg-white shadow-lg rounded-lg p-4 sm:p-6 mb-4 sm:mb-6">
-        <h1 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-4 text-gray-900">歡迎使用 SuperBrain</h1>
+        <h1 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-4 text-gray-900">{t('dashboard_welcome_title')}</h1>
         <p className="text-gray-600 text-sm sm:text-base">
-          您的 AI 知識助手，幫助您將資訊整理變成知識。
+          {t('dashboard_welcome_description')}
         </p>
       </div>
 

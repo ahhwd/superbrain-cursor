@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
+import { useTranslation } from "@/lib/useTranslation";
 
 interface Content {
   id: string;
@@ -30,6 +31,7 @@ export default function CapturePage() {
       router.push('/auth/signin');
     },
   });
+  const { t } = useTranslation();
 
   const [contents, setContents] = useState<Content[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -59,7 +61,7 @@ export default function CapturePage() {
       }
       
       if (!response.ok) {
-        throw new Error('無法載入內容');
+        throw new Error(t('error'));
       }
       
       const data = await response.json();
@@ -67,7 +69,7 @@ export default function CapturePage() {
       setPagination(data.pagination);
     } catch (err) {
       console.error('獲取內容時發生錯誤:', err);
-      setError(err instanceof Error ? err.message : '發生錯誤');
+      setError(err instanceof Error ? err.message : t('error'));
     } finally {
       setIsLoading(false);
     }
@@ -99,7 +101,7 @@ export default function CapturePage() {
         disabled={page === 1}
         className={`px-3 py-1 rounded-md ${page === 1 ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
       >
-        上一頁
+        {t('pagination_prev')}
       </button>
     );
     
@@ -157,7 +159,7 @@ export default function CapturePage() {
         disabled={page === totalPages}
         className={`px-3 py-1 rounded-md ${page === totalPages ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
       >
-        下一頁
+        {t('pagination_next')}
       </button>
     );
     
@@ -167,18 +169,20 @@ export default function CapturePage() {
   return (
     <div className="w-full">
       <div className="bg-white shadow-lg rounded-lg p-4 sm:p-6 mb-4 sm:mb-6">
-        <h1 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-4">已擷取內容</h1>
+        <h1 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-4">{t('capture_title')}</h1>
         <p className="text-gray-600 text-sm sm:text-base mb-2 sm:mb-4">
-          您可以查看所有已經擷取的網頁內容，以及 AI 產生的摘要
+          {t('capture_description')}
         </p>
       </div>
 
       <div className="bg-white shadow-lg rounded-lg p-4 sm:p-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
-          <h2 className="text-lg sm:text-xl font-semibold mb-2 sm:mb-0">已擷取內容</h2>
+          <h2 className="text-lg sm:text-xl font-semibold mb-2 sm:mb-0">{t('capture_list_title')}</h2>
           {pagination.total > 0 && (
             <p className="text-gray-500 text-xs sm:text-sm">
-              共 {pagination.total} 筆記錄，第 {pagination.page} 頁，共 {pagination.totalPages} 頁
+              {t('pagination_page_info').replace('{total}', pagination.total.toString())
+                                       .replace('{page}', pagination.page.toString())
+                                       .replace('{totalPages}', pagination.totalPages.toString())}
             </p>
           )}
         </div>
@@ -193,9 +197,9 @@ export default function CapturePage() {
           </div>
         ) : contents.length === 0 ? (
           <div className="text-center py-8">
-            <p className="text-gray-500">尚未擷取任何內容</p>
+            <p className="text-gray-500">{t('capture_empty')}</p>
             <p className="text-sm text-gray-400 mt-2">
-              使用 Chrome 擴充功能來擷取網頁內容
+              {t('capture_empty_description')}
             </p>
           </div>
         ) : (
@@ -223,15 +227,15 @@ export default function CapturePage() {
                   </div>
                   {content.summary ? (
                     <>
-                      <p className="text-gray-700 mb-1 sm:mb-2 font-medium">摘要：</p>
+                      <p className="text-gray-700 mb-1 sm:mb-2 font-medium">{t('capture_summary')}</p>
                       <p className="text-gray-700 text-sm sm:text-base mb-3 sm:mb-4">{content.summary}</p>
                     </>
                   ) : (
-                    <p className="text-gray-500 italic text-sm sm:text-base mb-3 sm:mb-4">尚未生成摘要</p>
+                    <p className="text-gray-500 italic text-sm sm:text-base mb-3 sm:mb-4">{t('capture_no_summary')}</p>
                   )}
                   
                   <div className="mt-4 sm:mt-6">
-                    <p className="text-gray-700 mb-1 sm:mb-2 font-medium">擷取內容：</p>
+                    <p className="text-gray-700 mb-1 sm:mb-2 font-medium">{t('capture_content_label')}</p>
                     <p className="text-gray-700 text-sm sm:text-base line-clamp-3">{content.content}</p>
                   </div>
                 </div>

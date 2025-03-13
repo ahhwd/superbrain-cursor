@@ -15,7 +15,22 @@ type TranslationKey =
   | 'usage_title' | 'usage_monthly_captures' | 'usage_pages'
   | 'account_section_title' | 'upgrade_pro' | 'coming_soon'
   | 'language_title' | 'language_select' | 'language_en' | 'language_zh'
-  | 'error_loading_usage' | 'error_loading_usage_detail';
+  | 'error_loading_usage' | 'error_loading_usage_detail'
+  // 儀表板頁面
+  | 'dashboard_welcome_title' | 'dashboard_welcome_description'
+  | 'dashboard_highlights_card' | 'dashboard_highlights_description'
+  | 'dashboard_capture_card' | 'dashboard_capture_description'
+  // 精華筆記頁面
+  | 'highlights_title' | 'highlights_description'
+  | 'highlights_list_title' | 'highlights_empty'
+  | 'highlights_empty_description' | 'highlights_source_urls'
+  | 'highlights_loading' | 'highlights_error'
+  | 'pagination_prev' | 'pagination_next' | 'pagination_page_info'
+  // 擷取內容頁面
+  | 'capture_title' | 'capture_description'
+  | 'capture_list_title' | 'capture_empty'
+  | 'capture_empty_description' | 'capture_summary'
+  | 'capture_no_summary' | 'capture_content_label';
 
 type TranslationSet = {
   [key in TranslationKey]: string;
@@ -84,7 +99,38 @@ const translations: Translations = {
     
     // 錯誤訊息
     'error_loading_usage': 'Unable to load usage data',
-    'error_loading_usage_detail': 'Error loading usage data'
+    'error_loading_usage_detail': 'Error loading usage data',
+    
+    // 儀表板頁面
+    'dashboard_welcome_title': 'Welcome to SuperBrain',
+    'dashboard_welcome_description': 'Your AI knowledge assistant, helping you transform information into knowledge.',
+    'dashboard_highlights_card': 'Highlights',
+    'dashboard_highlights_description': 'View AI-organized highlights from your content',
+    'dashboard_capture_card': 'Captured Content',
+    'dashboard_capture_description': 'View your captured web content',
+    
+    // 精華筆記頁面
+    'highlights_title': 'Highlights',
+    'highlights_description': 'AI automatically organizes your captured web content into topic-based highlights',
+    'highlights_list_title': 'Highlights List',
+    'highlights_empty': 'No highlights available',
+    'highlights_empty_description': 'Highlights will be automatically generated after you capture web content',
+    'highlights_source_urls': 'Source URLs',
+    'highlights_loading': 'Loading highlights...',
+    'highlights_error': 'Error loading highlights',
+    'pagination_prev': 'Previous',
+    'pagination_next': 'Next',
+    'pagination_page_info': 'Total {total} records, Page {page} of {totalPages}',
+    
+    // 擷取內容頁面
+    'capture_title': 'Captured Content',
+    'capture_description': 'You can view all your captured web content and AI-generated summaries',
+    'capture_list_title': 'Captured Content',
+    'capture_empty': 'No content captured yet',
+    'capture_empty_description': 'Use the Chrome extension to capture web content',
+    'capture_summary': 'Summary:',
+    'capture_no_summary': 'No summary generated yet',
+    'capture_content_label': 'Captured Content:'
   },
   
   // 繁體中文翻譯
@@ -144,7 +190,38 @@ const translations: Translations = {
     
     // 錯誤訊息
     'error_loading_usage': '無法獲取使用量數據',
-    'error_loading_usage_detail': '獲取使用量數據時出錯'
+    'error_loading_usage_detail': '獲取使用量數據時出錯',
+    
+    // 儀表板頁面
+    'dashboard_welcome_title': '歡迎使用 SuperBrain',
+    'dashboard_welcome_description': '您的 AI 知識助手，幫助您將資訊整理變成知識。',
+    'dashboard_highlights_card': '精華筆記',
+    'dashboard_highlights_description': '查看 AI 為您整理的精華筆記',
+    'dashboard_capture_card': '擷取內容',
+    'dashboard_capture_description': '查看您已擷取的網頁內容',
+    
+    // 精華筆記頁面
+    'highlights_title': '精華筆記',
+    'highlights_description': 'AI 將您從網頁儲存的擷取內容自動整理成不同主題的精華筆記',
+    'highlights_list_title': '精華筆記列表',
+    'highlights_empty': '目前沒有精華筆記',
+    'highlights_empty_description': '當您擷取網頁內容後，系統會自動為您生成精華筆記',
+    'highlights_source_urls': '來源網址',
+    'highlights_loading': '載入中...',
+    'highlights_error': '獲取精華筆記失敗',
+    'pagination_prev': '上一頁',
+    'pagination_next': '下一頁',
+    'pagination_page_info': '共 {total} 筆記錄，第 {page} 頁，共 {totalPages} 頁',
+    
+    // 擷取內容頁面
+    'capture_title': '已擷取內容',
+    'capture_description': '您可以查看所有已經擷取的網頁內容，以及 AI 產生的摘要',
+    'capture_list_title': '已擷取內容',
+    'capture_empty': '尚未擷取任何內容',
+    'capture_empty_description': '使用 Chrome 擴充功能來擷取網頁內容',
+    'capture_summary': '摘要：',
+    'capture_no_summary': '尚未生成摘要',
+    'capture_content_label': '擷取內容：'
   }
 };
 
