@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../../auth/[...nextauth]/auth";
+import { auth } from "../../auth/[...nextauth]/auth";
 import { prisma } from "@/lib/prisma";
 
 export async function POST(req: Request) {
   try {
     // 檢查用戶是否已登入
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user?.email) {
       return NextResponse.json(
         { error: "未授權的請求" },
