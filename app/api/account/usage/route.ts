@@ -2,13 +2,34 @@ import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { prisma } from "@/lib/prisma";
 import { NextRequest } from "next/server";
+import { headers } from "next/headers";
 
-// 獲取用戶 token
-async function getUserToken(req: NextRequest) {
-  return await getToken({
-    req,
-    secret: process.env.NEXTAUTH_SECRET,
-  });
+// 輔助函數：檢查並獲取用戶 token
+async function getUserToken(req?: NextRequest) {
+  try {
+    const headersList = req ? req.headers : headers();
+    
+    const token = await getToken({ 
+      req: req || {
+        headers: headersList,
+        cookies: Object.fromEntries(
+          Array.from(headersList.entries())
+            .filter(([key]) => key.toLowerCase() === 'cookie')
+            .flatMap(([_, value]) => 
+              value.split(';')
+                .map(cookie => cookie.trim().split('='))
+                .map(([key, value]) => [key, decodeURIComponent(value)])
+            )
+        ),
+      } as any,
+      secret: process.env.NEXTAUTH_SECRET,
+    });
+    
+    return token;
+  } catch (error) {
+    console.error('獲取 token 時發生錯誤:', error);
+    return null;
+  }
 }
 
 export async function GET(req: NextRequest) {
