@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { auth } from "../../auth/[...nextauth]/auth";
 import { prisma } from "@/lib/prisma";
+import { NextRequest } from "next/server";
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
     // 檢查用戶是否已登入
     const session = await auth();

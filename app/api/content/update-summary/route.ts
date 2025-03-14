@@ -3,9 +3,10 @@ import { getToken } from "next-auth/jwt";
 import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
 import { generateSummaryAndCategory } from "@/lib/openai";
+import { NextRequest } from "next/server";
 
 // 輔助函數：檢查並獲取用戶 token
-async function getUserToken(req?: Request) {
+async function getUserToken(req?: NextRequest) {
   try {
     const headersList = req ? req.headers : headers();
     
@@ -35,7 +36,7 @@ async function getUserToken(req?: Request) {
   }
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
     console.log('收到更新摘要請求');
     const token = await getUserToken(req);

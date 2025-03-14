@@ -2,9 +2,10 @@ import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
+import { NextRequest } from "next/server";
 
 // 輔助函數：檢查並獲取用戶 token
-async function getUserToken(req?: Request) {
+async function getUserToken(req?: NextRequest) {
   try {
     const headersList = req ? req.headers : headers();
     
@@ -31,7 +32,7 @@ async function getUserToken(req?: Request) {
   }
 }
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   try {
     const token = await getUserToken();
     
