@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   try {
     console.log('收到測試請求');
     
