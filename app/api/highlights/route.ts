@@ -40,14 +40,11 @@ async function processNewContents(userId: string) {
   try {
     console.log('檢查是否有新的擷取內容需要處理');
 
-    // 獲取用戶的最後訪問時間
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: { lastVisitedHighlights: true }
-    });
-
-    const lastVisitTime = user?.lastVisitedHighlights || new Date(0);
-    console.log('用戶上次訪問時間:', lastVisitTime);
+    // 由於沒有 lastVisitedHighlights 字段，我們使用一個默認的時間（例如一天前）
+    const oneDayAgo = new Date();
+    oneDayAgo.setDate(oneDayAgo.getDate() - 1);
+    const lastVisitTime = oneDayAgo;
+    console.log('默認查詢一天內的內容，時間:', lastVisitTime);
 
     // 獲取上次訪問後的新擷取內容（有摘要和分類的內容）
     const newContents = await prisma.content.findMany({
@@ -209,11 +206,8 @@ export async function GET(req: Request) {
     // 處理新的擷取內容
     await processNewContents(token.sub as string);
     
-    // 更新用戶的最後訪問時間
-    await prisma.user.update({
-      where: { id: token.sub as string },
-      data: { lastVisitedHighlights: new Date() }
-    });
+    // 不再更新不存在的 lastVisitedHighlights 字段
+    // 如果需要記錄訪問時間，可以在將來添加這個字段到 Prisma 模型中
     
     // 獲取總記錄數
     const totalCount = await prisma.highlight.count({
