@@ -1,11 +1,10 @@
 import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { prisma } from "@/lib/prisma";
-import { NextApiRequest } from "next";
 import { NextRequest } from "next/server";
 
 // 獲取用戶 token
-async function getUserToken(req: NextRequest | NextApiRequest) {
+async function getUserToken(req: NextRequest) {
   return await getToken({
     req,
     secret: process.env.NEXTAUTH_SECRET,
