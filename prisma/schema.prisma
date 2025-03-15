@@ -13,15 +13,14 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -35,21 +34,21 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  hashedPassword String?
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  highlights    Highlight[]
-  contents      Content[]
-  notionIntegration NotionIntegration?
-  savedContents     SavedContent[]
-  topics           Topic[]
-  createdAt        DateTime          @default(now())
-  updatedAt        DateTime          @updatedAt
+  id                    String         @id @default(cuid())
+  name                  String?
+  email                 String?        @unique
+  hashedPassword        String?
+  emailVerified         DateTime?
+  image                 String?
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
+  lastVisitedHighlights DateTime?
+  accounts              Account[]
+  contents              Content[]
+  highlights            Highlight[]
+  savedContents         SavedContent[]
+  sessions              Session[]
+  topics                Topic[]
 }
 
 model VerificationToken {
@@ -60,64 +59,52 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-model NotionIntegration {
-  id                String   @id @default(cuid())
-  userId            String   @unique
-  accessToken       String
-  workspaceId       String
-  databaseId        String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
 model SavedContent {
-  id          String   @id @default(cuid())
-  userId      String
-  url         String
-  title       String?
-  content     String   @db.Text
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  topics      Topic[]
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id        String   @id @default(cuid())
+  userId    String
+  url       String
+  title     String?
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  topics    Topic[]  @relation("SavedContentToTopic")
 }
 
 model Topic {
   id            String         @id @default(cuid())
   name          String
   userId        String
-  notionPageId  String?
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
-  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  savedContents SavedContent[]
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  savedContents SavedContent[] @relation("SavedContentToTopic")
 
   @@unique([userId, name])
+}
+
+model Content {
+  id        String   @id @default(cuid())
+  url       String
+  title     String
+  content   String
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  category  String?
+  summary   String?
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model Highlight {
   id        String   @id @default(cuid())
   title     String?
-  content   String   @db.Text
+  content   String
   category  String
   userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, category])
-}
-
-model Content {
-  id        String   @id @default(cuid())
-  title     String?
-  content   String   @db.Text
-  summary   String?  @db.Text
-  url       String?
-  category  String?
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }

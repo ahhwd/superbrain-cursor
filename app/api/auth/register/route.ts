@@ -31,7 +31,8 @@ export async function POST(req: NextRequest) {
       }
     });
 
-    return NextResponse.json(user);
+    const { hashedPassword: _, ...userWithoutPassword } = user;
+    return NextResponse.json(userWithoutPassword);
   } catch (error) {
     console.log("[REGISTER_ERROR]", error);
     return new NextResponse("內部伺服器錯誤", { status: 500 });

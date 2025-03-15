@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "SuperBrain",
+  "version": "1.0",
+  "description": "Save and organize web content with SuperBrain",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "cookies",
+    "storage"
+  ],
+  "host_permissions": [
+    "http://localhost:*/*"
+  ],
+  "action": {
+    "default_popup": "src/popup.html"
+  },
+  "background": {
+    "service_worker": "src/background.js"
+  }
+} 

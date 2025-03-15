@@ -1,7 +1,21 @@
+<<<<<<< HEAD
 # dependencies
 /node_modules
 /.pnp
 .pnp.js
+=======
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+>>>>>>> 1ba8565bb22671d515ea43969547997ad723e12c
 
 # testing
 /coverage
@@ -21,10 +35,17 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+<<<<<<< HEAD
 
 # local env files
 .env*.local
 .env
+=======
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+>>>>>>> 1ba8565bb22671d515ea43969547997ad723e12c
 
 # vercel
 .vercel
@@ -32,7 +53,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+<<<<<<< HEAD
 
 # IDE
 .idea/
 .vscode/ 
+=======
+>>>>>>> 1ba8565bb22671d515ea43969547997ad723e12c
