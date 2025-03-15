@@ -2,7 +2,14 @@ import { useContext } from 'react';
 import { LanguageContext } from '@/app/providers';
 import translations, { TranslationKey } from './translations';
 
-export function useTranslation() {
+// 定義 useTranslation 返回類型
+interface UseTranslationReturn {
+  t: (key: TranslationKey) => string;
+  locale: string;
+  translateCategory: (category: string | null) => string;
+}
+
+export function useTranslation(): UseTranslationReturn {
   const { locale } = useContext(LanguageContext);
   
   // 獲取翻譯文本
@@ -21,5 +28,20 @@ export function useTranslation() {
     return key;
   };
   
-  return { t, locale };
+  // 翻譯分類
+  const translateCategory = (category: string | null): string => {
+    if (!category) return '';
+    
+    const key = `category_${category}` as TranslationKey;
+    
+    // 檢查是否有對應的翻譯
+    if (translations[locale] && translations[locale][key]) {
+      return translations[locale][key];
+    }
+    
+    // 如果沒有找到翻譯，返回原始分類名
+    return category;
+  };
+  
+  return { t, locale, translateCategory };
 } 
