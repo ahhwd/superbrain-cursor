@@ -4,11 +4,8 @@ import { compare } from "bcrypt";
 import { prisma } from "../../../../lib/prisma";
 import { JWT } from "next-auth/jwt";
 
-// 強制設置 baseUrl 為本地環境
-const BASE_URL = "http://localhost:3000";
-
-// 強制覆蓋環境變數
-process.env.NEXTAUTH_URL = BASE_URL;
+// 使用環境變數
+const BASE_URL = process.env.NEXTAUTH_URL || "http://localhost:3001";
 
 // 擴展 Session 類型
 declare module "next-auth" {
@@ -107,10 +104,9 @@ export const authConfig: NextAuthOptions = {
       return session;
     },
     async redirect({ url, baseUrl }) {
-      // 忽略傳入的 baseUrl，強制使用本地 URL
-      console.log("重定向回調被調用", { url, 忽略baseUrl: baseUrl, 強制使用: BASE_URL });
+      console.log("重定向回調被調用", { url, baseUrl, '強制本地URL': BASE_URL });
       
-      // 強制使用本地 URL
+      // 使用環境變數中的 URL
       if (url.startsWith("/")) {
         return `${BASE_URL}${url}`;
       }
